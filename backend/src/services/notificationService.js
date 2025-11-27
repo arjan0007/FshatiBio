@@ -114,6 +114,7 @@ async function notifyOrderStatusChange(orderId, newStatus) {
 
     const order = orderResult.rows[0];
     const statusMessages = {
+      pending: 'Porosia juaj u krijua me sukses! Po pritet konfirmimi.',
       confirmed: 'Porosia juaj u konfirmua!',
       preparing: 'Porosia juaj po përgatitet.',
       on_delivery: 'Porosia juaj është në rrugë!',
@@ -122,19 +123,40 @@ async function notifyOrderStatusChange(orderId, newStatus) {
     };
 
     const message = statusMessages[newStatus] || `Statusi i porosisë u ndryshua në: ${newStatus}`;
+    const title = `Porosia #${order.order_number}`;
+    const linkUrl = `/orders/${orderId}`;
 
-    await sendNotification(
-      order.user_id,
-      `Porosia #${order.order_number}`,
-      message,
-      {
-        type: 'order_status',
-        order_id: orderId,
-        order_number: order.order_number,
-        status: newStatus,
-        link_url: `/orders/${orderId}`,
-      }
+    // Always save notification to database, even if push notification fails
+    await pool.query(
+      `INSERT INTO notifications (user_id, type, title, message, link_url)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [
+        order.user_id,
+        'order_status',
+        title,
+        message,
+        linkUrl
+      ]
     );
+
+    // Try to send push notification if FCM is available
+    try {
+      await sendNotification(
+        order.user_id,
+        title,
+        message,
+        {
+          type: 'order_status',
+          order_id: orderId,
+          order_number: order.order_number,
+          status: newStatus,
+          link_url: linkUrl,
+        }
+      );
+    } catch (pushError) {
+      // Push notification failed, but database notification was saved
+      console.log('Push notification failed, but database notification saved:', pushError.message);
+    }
   } catch (error) {
     console.error('Error notifying order status change:', error);
   }
