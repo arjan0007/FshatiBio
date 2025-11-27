@@ -179,14 +179,14 @@ export default function AdminDashboard() {
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
               >
                 <div className={`bg-gradient-to-r ${card.color} p-6`}>
-                  <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
                     <div className="text-4xl">{card.icon}</div>
                     <div className="text-right">
                       <p className="text-white/80 text-sm font-medium">{card.title}</p>
                       <p className="text-white text-3xl font-bold mt-1">{card.value}</p>
                     </div>
-                  </div>
-                </div>
+          </div>
+        </div>
                 <div className="p-4 bg-gray-50">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-500">Ndryshimi nga muaji i kaluar</span>
@@ -194,10 +194,10 @@ export default function AdminDashboard() {
                       {card.change} ↗
                     </span>
                   </div>
-                </div>
-              </div>
+            </div>
+            </div>
             ))}
-          </div>
+            </div>
 
           {/* Charts Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -298,18 +298,18 @@ export default function AdminDashboard() {
             ) : (
               <div className="text-center py-12 text-gray-500">
                 <p className="text-lg">Nuk ka porosi të reja</p>
-              </div>
-            )}
-            <div className="mt-4">
-              <a 
-                href="/admin/orders" 
-                className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center gap-2"
-              >
-                Shiko të gjitha porositë →
-              </a>
-            </div>
           </div>
-      </div>
+        )}
+            <div className="mt-4">
+            <a
+              href="/admin/orders"
+                className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center gap-2"
+            >
+                Shiko të gjitha porositë →
+            </a>
+          </div>
+        </div>
+    </div>
     </AdminLayout>
   );
 }

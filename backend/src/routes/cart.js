@@ -241,5 +241,22 @@ router.delete('/remove/:item_id', authenticateToken, async (req, res, next) => {
   }
 });
 
+// DELETE /api/cart/clear
+router.delete('/clear', authenticateToken, async (req, res, next) => {
+  try {
+    const result = await pool.query(
+      'DELETE FROM cart WHERE user_id = $1',
+      [req.user.userId]
+    );
+
+    res.json({
+      success: true,
+      message: 'Cart cleared successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
 

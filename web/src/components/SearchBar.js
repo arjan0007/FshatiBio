@@ -89,7 +89,7 @@ export default function SearchBar() {
 
   return (
     <div className="relative w-full md:flex-1 max-w-2xl mx-0 md:mx-4" ref={searchRef}>
-      <div className="relative">
+      <div className="relative group">
         <input
           type="text"
           value={searchTerm}
@@ -101,9 +101,9 @@ export default function SearchBar() {
             }
           }}
           placeholder="Kërko produkte..."
-          className="w-full px-3 py-2 md:px-4 md:py-3 pl-10 md:pl-12 pr-20 md:pr-28 border-2 border-gray-200 rounded-full focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all shadow-sm hover:shadow-md text-sm md:text-base"
+          className="w-full px-3 py-2 md:px-4 md:py-3 pl-10 md:pl-12 pr-20 md:pr-28 border-2 border-gray-200 rounded-full focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all shadow-sm hover:shadow-md hover:border-green-300 text-sm md:text-base bg-white/50 backdrop-blur-sm group-hover:bg-white"
         />
-        <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base">
+        <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-green-600 transition-colors text-sm md:text-base">
           🔍
         </div>
         {searchTerm && (
@@ -113,14 +113,14 @@ export default function SearchBar() {
               setSuggestions([]);
               setShowSuggestions(false);
             }}
-            className="absolute right-16 md:right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm md:text-base"
+            className="absolute right-16 md:right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors text-sm md:text-base hover:scale-110"
           >
             ✕
           </button>
         )}
         <button
           onClick={() => handleSearch(searchTerm)}
-          className="absolute right-1 md:right-2 top-1/2 transform -translate-y-1/2 bg-green-600 text-white px-2 py-1 md:px-4 md:py-1.5 rounded-full hover:bg-green-700 transition-colors font-medium text-xs md:text-sm"
+          className="absolute right-1 md:right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full hover:from-green-700 hover:to-emerald-700 transition-all font-semibold text-xs md:text-sm shadow-lg hover:shadow-xl transform hover:scale-105"
         >
           <span className="hidden sm:inline">Kërko</span>
           <span className="sm:hidden">🔍</span>

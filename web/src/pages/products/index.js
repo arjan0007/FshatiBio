@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import axios from 'axios';
-import SearchBar from '../../components/SearchBar';
+import Header from '../../components/Header';
+import Toast from '../../components/Toast';
 import { getSeasonalClass } from '../../utils/seasonalTheme';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
@@ -20,10 +21,18 @@ export default function Products() {
   const currentPage = parseInt(page) || 1;
   const [isVisible, setIsVisible] = useState({});
   const [scrollY, setScrollY] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+  const [seasonalClass, setSeasonalClass] = useState('');
+  const [addingToCart, setAddingToCart] = useState({});
+  const [toast, setToast] = useState(null);
   const categoriesRef = useRef(null);
   const productsRef = useRef(null);
 
-  const seasonalClass = getSeasonalClass();
+  // Fix hydration error by only rendering random values on client
+  useEffect(() => {
+    setIsMounted(true);
+    setSeasonalClass(getSeasonalClass());
+  }, []);
 
   useEffect(() => {
     fetchCategories();
@@ -144,6 +153,41 @@ export default function Products() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleAddToCart = async (productId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login?redirect=/products';
+      }
+      return;
+    }
+
+    setAddingToCart(prev => ({ ...prev, [productId]: true }));
+    try {
+      await axios.post(
+        `${API_URL}/cart/add`,
+        { product_id: productId, quantity: 1 },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      setToast({
+        message: 'Produkti u shtua në shportë me sukses! 🛒',
+        type: 'success'
+      });
+    } catch (error) {
+      setToast({
+        message: error.response?.data?.error?.message || 'Gabim në shtimin e produktit',
+        type: 'error'
+      });
+    } finally {
+      setAddingToCart(prev => ({ ...prev, [productId]: false }));
+    }
+  };
+
   // Confetti effect function
   const createConfetti = (element) => {
     const colors = ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#fbbf24', '#fcd34d'];
@@ -229,199 +273,9 @@ export default function Products() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      {/* Header - Ultra Modern WOW Design */}
-      <header className="relative bg-white/95 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-gray-200/50 overflow-visible md:overflow-hidden">
-        {/* Animated Background Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-green-50/50 via-emerald-50/30 to-teal-50/50 opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
-        
-        {/* Animated Top Border */}
-        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-green-400 to-transparent animate-pulse"></div>
-        
-        {/* Floating Particles */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-green-400 rounded-full opacity-10 animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${3 + Math.random() * 2}s`
-              }}
-            ></div>
-          ))}
-        </div>
-        
-        <div className="container mx-auto px-3 sm:px-4 py-2.5 md:py-4 relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
-            {/* Logo Section - Enhanced */}
-            <div className="flex items-center justify-between w-full md:w-auto">
-              <Link 
-                href="/" 
-                className="group relative text-xl sm:text-2xl md:text-3xl font-black flex items-center gap-1.5 sm:gap-2"
-                onClick={(e) => {
-                  if (window.scrollY > 0) {
-                    createConfetti(e.currentTarget);
-                  }
-                }}
-              >
-                {/* Glow Effect */}
-                <div className="absolute inset-0 bg-green-400 rounded-full blur-2xl opacity-0 group-hover:opacity-30 animate-pulse transition-opacity duration-500"></div>
-                
-                {/* Logo Content */}
-                <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
-                  <span className="text-2xl sm:text-3xl md:text-4xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 filter drop-shadow-lg">
-                    🥛
-                  </span>
-                  <span className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent animate-gradient-shift relative">
-                    FshatiBio
-                    <span className="absolute inset-0 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent blur-xl opacity-50 group-hover:opacity-100 transition-opacity duration-500">
-                      FshatiBio
-                    </span>
-                  </span>
-                </span>
-            </Link>
-              
-              {/* Mobile Menu Button - Enhanced */}
-              <button
-                className="md:hidden relative text-gray-700 hover:text-green-600 p-2 rounded-lg hover:bg-green-50 active:bg-green-100 transition-all duration-300 group"
-                onClick={() => {
-                  const nav = document.getElementById('mobile-nav');
-                  const icon = document.getElementById('menu-icon');
-                  nav?.classList.toggle('hidden');
-                  icon?.classList.toggle('rotate-90');
-                }}
-                aria-label="Toggle menu"
-              >
-                <span id="menu-icon" className="text-2xl transform transition-transform duration-300 block">☰</span>
-              </button>
-            </div>
-            
-            {/* Search Bar Section */}
-            <div className="w-full md:w-auto order-3 md:order-2 relative">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="relative">
-            <SearchBar />
-                </div>
-              </div>
-            </div>
-            
-            {/* Navigation - Enhanced for Mobile */}
-            <nav id="mobile-nav" className="hidden md:flex flex-col md:flex-row gap-2 md:gap-3 w-full md:w-auto order-2 md:order-3 md:mt-0 mt-3 pb-3 md:pb-0 border-t border-gray-200 md:border-t-0 pt-3 md:pt-0 bg-white md:bg-transparent rounded-lg md:rounded-none shadow-lg md:shadow-none max-h-[80vh] md:max-h-none overflow-y-auto md:overflow-visible z-50">
-              <Link 
-                href="/products" 
-                className="group/nav relative text-gray-700 hover:text-green-700 font-semibold transition-all duration-300 text-left py-2.5 md:py-1.5 px-4 md:px-3 rounded-lg hover:bg-green-50 active:bg-green-100 relative overflow-hidden flex items-center gap-2 md:gap-1.5 min-h-[44px] md:min-h-0"
-                onClick={() => {
-                  const nav = document.getElementById('mobile-nav');
-                  if (window.innerWidth < 768) {
-                    nav?.classList.add('hidden');
-                  }
-                }}
-              >
-                <span className="text-lg md:text-sm opacity-100 md:opacity-0 group-hover/nav:opacity-100 transform md:-translate-x-2 md:group-hover/nav:translate-x-0 transition-all duration-300 flex-shrink-0">🛍️</span>
-                <span className="relative z-10 flex-1">Produktet</span>
-                <span className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-emerald-400 transform scale-y-0 group-hover/nav:scale-y-100 transition-transform duration-300 md:hidden"></span>
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-emerald-400 transform scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 hidden md:block"></span>
-              </Link>
-              
-              <Link 
-                href="/cart" 
-                className="group/nav relative text-gray-700 hover:text-green-700 font-semibold transition-all duration-300 text-left py-2.5 md:py-1.5 px-4 md:px-3 rounded-lg hover:bg-green-50 active:bg-green-100 relative overflow-hidden flex items-center gap-2 md:gap-1.5 min-h-[44px] md:min-h-0"
-                onClick={() => {
-                  const nav = document.getElementById('mobile-nav');
-                  if (window.innerWidth < 768) {
-                    nav?.classList.add('hidden');
-                  }
-                }}
-              >
-                <span className="text-lg md:text-sm opacity-100 md:opacity-0 group-hover/nav:opacity-100 transform md:-translate-x-2 md:group-hover/nav:translate-x-0 transition-all duration-300 flex-shrink-0">🛒</span>
-                <span className="relative z-10 flex-1">Shporta</span>
-                <span className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-emerald-400 transform scale-y-0 group-hover/nav:scale-y-100 transition-transform duration-300 md:hidden"></span>
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-emerald-400 transform scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 hidden md:block"></span>
-              </Link>
-              
-              {typeof window !== 'undefined' && localStorage.getItem('auth_token') ? (
-                <>
-                  <Link 
-                    href="/orders" 
-                    className="group/nav relative text-gray-700 hover:text-green-700 font-semibold transition-all duration-300 text-left py-2.5 md:py-1.5 px-4 md:px-3 rounded-lg hover:bg-green-50 active:bg-green-100 relative overflow-hidden flex items-center gap-2 md:gap-1.5 min-h-[44px] md:min-h-0"
-                    onClick={() => {
-                      const nav = document.getElementById('mobile-nav');
-                      if (window.innerWidth < 768) {
-                        nav?.classList.add('hidden');
-                      }
-                    }}
-                  >
-                    <span className="text-lg md:text-sm opacity-100 md:opacity-0 group-hover/nav:opacity-100 transform md:-translate-x-2 md:group-hover/nav:translate-x-0 transition-all duration-300 flex-shrink-0">📦</span>
-                    <span className="relative z-10 flex-1">Porositë</span>
-                    <span className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-emerald-400 transform scale-y-0 group-hover/nav:scale-y-100 transition-transform duration-300 md:hidden"></span>
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-emerald-400 transform scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 hidden md:block"></span>
-                  </Link>
-                  
-                  <Link 
-                    href="/notifications" 
-                    className="group/nav relative text-gray-700 hover:text-green-700 font-semibold transition-all duration-300 text-left py-2.5 md:py-1.5 px-4 md:px-3 rounded-lg hover:bg-green-50 active:bg-green-100 relative overflow-hidden flex items-center gap-2 md:gap-1.5 min-h-[44px] md:min-h-0"
-                    onClick={() => {
-                      const nav = document.getElementById('mobile-nav');
-                      if (window.innerWidth < 768) {
-                        nav?.classList.add('hidden');
-                      }
-                    }}
-                  >
-                    <span className="text-lg md:text-sm opacity-100 md:opacity-0 group-hover/nav:opacity-100 transform md:-translate-x-2 md:group-hover/nav:translate-x-0 transition-all duration-300 flex-shrink-0">🔔</span>
-                    <span className="relative z-10 flex-1">Njoftimet</span>
-                    <span className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-emerald-400 transform scale-y-0 group-hover/nav:scale-y-100 transition-transform duration-300 md:hidden"></span>
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-emerald-400 transform scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 hidden md:block"></span>
-              </Link>
-                  
-                  <Link 
-                    href="/profile" 
-                    className="group/nav relative text-gray-700 hover:text-green-700 font-semibold transition-all duration-300 text-left py-2.5 md:py-1.5 px-4 md:px-3 rounded-lg hover:bg-green-50 active:bg-green-100 relative overflow-hidden flex items-center gap-2 md:gap-1.5 min-h-[44px] md:min-h-0"
-                    onClick={() => {
-                      const nav = document.getElementById('mobile-nav');
-                      if (window.innerWidth < 768) {
-                        nav?.classList.add('hidden');
-                      }
-                    }}
-                  >
-                    <span className="text-lg md:text-sm opacity-100 md:opacity-0 group-hover/nav:opacity-100 transform md:-translate-x-2 md:group-hover/nav:translate-x-0 transition-all duration-300 flex-shrink-0">👤</span>
-                    <span className="relative z-10 flex-1">Profili</span>
-                    <span className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-emerald-400 transform scale-y-0 group-hover/nav:scale-y-100 transition-transform duration-300 md:hidden"></span>
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-emerald-400 transform scale-x-0 group-hover/nav:scale-x-100 transition-transform duration-300 hidden md:block"></span>
-              </Link>
-                </>
-              ) : (
-                <Link 
-                  href="/login" 
-                  className="group/btn relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white px-5 py-3 md:py-2.5 rounded-xl hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 transition-all duration-300 font-semibold text-center md:text-left overflow-hidden shadow-lg hover:shadow-xl transform active:scale-95 md:hover:scale-105 w-full md:w-auto min-h-[44px] md:min-h-0 flex items-center justify-center md:justify-start"
-                  onClick={(e) => {
-                    createConfetti(e.currentTarget);
-                    const nav = document.getElementById('mobile-nav');
-                    if (window.innerWidth < 768) {
-                      nav?.classList.add('hidden');
-                    }
-                  }}
-                >
-                  <span className="relative z-10 flex items-center justify-center md:justify-start gap-2">
-                    <span>Kyçu</span>
-                    <span className="transform group-hover/btn:translate-x-1 transition-transform duration-300">→</span>
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-white/20 rounded-xl blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-              </Link>
-              )}
-            </nav>
-          </div>
-        </div>
-        
-        {/* Animated Bottom Border on Scroll */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-300/50 to-transparent"></div>
-      </header>
+      <Header />
 
-      <main className="relative container mx-auto px-4 py-6 sm:py-8 md:py-10 overflow-hidden">
+      <main className="relative container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 lg:py-10 overflow-hidden">
         {/* Ultra WOW Animated Background Blobs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-green-400/20 rounded-full blur-3xl animate-blob"></div>
@@ -430,38 +284,54 @@ export default function Products() {
         </div>
 
         {/* Enhanced Floating Particles */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          {[...Array(15)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-2 h-2 bg-green-400/30 rounded-full animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${4 + Math.random() * 3}s`
-              }}
-            ></div>
-          ))}
-              </div>
-
-        {/* Floating Icons */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          {['🌾', '🥛', '🌿', '✨', '⭐'].map((icon, i) => (
-            <div
-              key={i}
-              className="absolute text-3xl opacity-10 animate-float"
-              style={{
-                left: `${10 + Math.random() * 80}%`,
-                top: `${10 + Math.random() * 80}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${5 + Math.random() * 3}s`
-              }}
-            >
-              {icon}
+        {isMounted && (
+          <>
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+              {[...Array(15)].map((_, i) => {
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = 4 + Math.random() * 3;
+                return (
+                  <div
+                    key={i}
+                    className="absolute w-2 h-2 bg-green-400/30 rounded-full animate-float"
+                    style={{
+                      left: `${left}%`,
+                      top: `${top}%`,
+                      animationDelay: `${delay}s`,
+                      animationDuration: `${duration}s`
+                    }}
+                  ></div>
+                );
+              })}
             </div>
-          ))}
-              </div>
+
+            {/* Floating Icons */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+              {['🌾', '🥛', '🌿', '✨', '⭐'].map((icon, i) => {
+                const left = 10 + Math.random() * 80;
+                const top = 10 + Math.random() * 80;
+                const delay = Math.random() * 5;
+                const duration = 5 + Math.random() * 3;
+                return (
+                  <div
+                    key={i}
+                    className="absolute text-3xl opacity-10 animate-float"
+                    style={{
+                      left: `${left}%`,
+                      top: `${top}%`,
+                      animationDelay: `${delay}s`,
+                      animationDuration: `${duration}s`
+                    }}
+                  >
+                    {icon}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
 
         <div className="relative z-10">
           {/* Page Header - Ultra WOW Design */}
@@ -607,11 +477,10 @@ export default function Products() {
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 md:gap-8 lg:gap-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
                 {products.map((product, index) => (
-                  <Link
+                  <div
                     key={product.id}
-                    href={`/products/${product.id}`}
                     className="group relative perspective-1000 product-card"
                     style={{ animationDelay: `${index * 0.1}s` }}
                     onMouseEnter={(e) => {
@@ -629,27 +498,34 @@ export default function Products() {
                         <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-white/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         
                         {/* Sparkle Particles */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                          {[...Array(6)].map((_, i) => (
-                            <div
-                              key={i}
-                              className="absolute w-1 h-1 bg-white rounded-full animate-sparkle"
-                              style={{
-                                left: `${20 + Math.random() * 60}%`,
-                                top: `${20 + Math.random() * 60}%`,
-                                animationDelay: `${Math.random() * 2}s`
-                              }}
-                            ></div>
-                          ))}
-                        </div>
+                        {isMounted && (
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            {[...Array(6)].map((_, i) => {
+                              const left = 20 + Math.random() * 60;
+                              const top = 20 + Math.random() * 60;
+                              const delay = Math.random() * 2;
+                              return (
+                                <div
+                                  key={i}
+                                  className="absolute w-1 h-1 bg-white rounded-full animate-sparkle"
+                                  style={{
+                                    left: `${left}%`,
+                                    top: `${top}%`,
+                                    animationDelay: `${delay}s`
+                                  }}
+                                ></div>
+                              );
+                            })}
+                          </div>
+                        )}
                         
                         {/* Shine Effect */}
                         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 overflow-hidden">
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
                         </div>
                         
-                        {/* Image Container */}
-                        <div className="relative overflow-hidden h-48 sm:h-56 md:h-64">
+                        {/* Image Container - Clickable Link */}
+                        <Link href={`/products/${product.id}`} className="relative overflow-hidden h-40 sm:h-48 md:h-56 lg:h-64 block">
                           {product.image_urls && product.image_urls.length > 0 ? (
                             <>
                       <img
@@ -662,7 +538,7 @@ export default function Products() {
                             </>
                           ) : (
                             <div className="w-full h-full bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 flex items-center justify-center group-hover:from-green-200 group-hover:via-emerald-200 group-hover:to-teal-200 transition-all duration-500">
-                            <span className="text-5xl sm:text-6xl md:text-7xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-700">🌾</span>
+                              <span className="text-5xl sm:text-6xl md:text-7xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-700">🌾</span>
                           </div>
                           )}
                           
@@ -689,12 +565,12 @@ export default function Products() {
                               </div>
                             </div>
                         )}
-                      </div>
+                      </Link>
                         
                         {/* Content */}
-                        <div className="relative z-10 p-4 md:p-6 bg-white/80 backdrop-blur-md">
+                        <div className="relative z-10 p-3 sm:p-4 md:p-5 lg:p-6 bg-white/80 backdrop-blur-md">
                           {/* Product Name */}
-                          <h3 className="font-black text-base md:text-lg lg:text-xl mb-3 text-gray-800 group-hover:text-green-600 transition-colors duration-500 line-clamp-2 relative">
+                          <h3 className="font-black text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3 text-gray-800 group-hover:text-green-600 transition-colors duration-500 line-clamp-2 relative">
                             <span className="relative z-10">{product.name}</span>
                             <span className="absolute inset-0 text-green-400 blur-sm opacity-0 group-hover:opacity-30 transition-opacity duration-500">
                               {product.name}
@@ -702,39 +578,62 @@ export default function Products() {
                           </h3>
                           
                           {/* Price and Rating */}
-                          <div className="flex items-center justify-between">
-                            <div className="relative">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="relative flex-shrink-0">
                               {/* Price with Glow */}
                               <div className="relative">
-                                <p className="text-green-700 font-black text-xl md:text-2xl lg:text-3xl transform group-hover:scale-110 transition-transform duration-300 relative z-10">
+                                <p className="text-green-700 font-black text-lg sm:text-xl md:text-2xl lg:text-3xl transform group-hover:scale-110 transition-transform duration-300 relative z-10">
                                   {product.price} L
                                 </p>
                                 <p className="absolute inset-0 text-green-400 blur-md opacity-50 group-hover:opacity-100 transition-opacity duration-300">
                                   {product.price} L
                                 </p>
                               </div>
-                              <p className="text-gray-500 text-xs md:text-sm font-semibold mt-1">
+                              <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm font-semibold mt-0.5 sm:mt-1">
                                 / {product.unit}
                               </p>
                             </div>
                             
                             {/* Rating with Animation */}
                             {product.average_rating > 0 && (
-                              <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-1.5 rounded-full border-2 border-yellow-200 group-hover:border-yellow-300 group-hover:bg-yellow-100 transition-all duration-300 transform group-hover:scale-110">
-                                <span className="text-yellow-400 text-base md:text-lg transform group-hover:rotate-12 group-hover:scale-125 transition-all duration-300">⭐</span>
-                                <span className="text-xs md:text-sm font-black text-gray-800">
+                              <div className="flex items-center gap-1 sm:gap-1.5 bg-yellow-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border-2 border-yellow-200 group-hover:border-yellow-300 group-hover:bg-yellow-100 transition-all duration-300 transform group-hover:scale-110 flex-shrink-0">
+                                <span className="text-yellow-400 text-sm sm:text-base md:text-lg transform group-hover:rotate-12 group-hover:scale-125 transition-all duration-300">⭐</span>
+                                <span className="text-[10px] sm:text-xs md:text-sm font-black text-gray-800">
                                   {product.average_rating.toFixed(1)}
                                 </span>
                               </div>
                             )}
                           </div>
                           
-                          {/* Hover Arrow Indicator */}
-                          <div className="mt-4 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full shadow-lg">
-                              <span className="text-sm font-black">Shiko Detajet</span>
-                              <span className="text-lg font-black transform group-hover:translate-x-2 transition-transform duration-300">→</span>
-                            </div>
+                          {/* Action Buttons */}
+                          <div className="mt-3 sm:mt-4 flex gap-1.5 sm:gap-2">
+                            <Link
+                              href={`/products/${product.id}`}
+                              className="flex-1 inline-flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full shadow-lg hover:from-green-600 hover:to-emerald-600 transition-all transform hover:scale-105 text-xs sm:text-sm font-black"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <span className="hidden sm:inline">Detajet</span>
+                              <span className="sm:hidden">Detaje</span>
+                              <span className="transform group-hover:translate-x-1 transition-transform duration-300 text-xs sm:text-sm">→</span>
+                            </Link>
+                            <button
+                              onClick={(e) => handleAddToCart(product.id, e)}
+                              disabled={addingToCart[product.id] || product.stock_quantity === 0}
+                              className="flex-1 inline-flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full shadow-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm font-black"
+                            >
+                              {addingToCart[product.id] ? (
+                                <>
+                                  <span className="hidden sm:inline">Duke shtuar...</span>
+                                  <span className="sm:hidden">...</span>
+                                  <span className="animate-spin text-xs sm:text-sm">⏳</span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="hidden sm:inline">🛒 Shto</span>
+                                  <span className="sm:hidden">🛒</span>
+                                </>
+                              )}
+                            </button>
                           </div>
                         </div>
                         
@@ -744,7 +643,7 @@ export default function Products() {
                         
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             )}
@@ -752,24 +651,25 @@ export default function Products() {
             
             {/* Pagination - Enhanced */}
             {!loading && products.length > 0 && totalPages > 1 && (
-              <div className="mt-8 md:mt-12 flex flex-col items-center gap-4 relative">
+              <div className="mt-6 sm:mt-8 md:mt-12 flex flex-col items-center gap-3 sm:gap-4 relative">
                 {/* Background Glow */}
                 <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-emerald-400/10 to-teal-400/10 rounded-2xl blur-xl"></div>
                 
-                <div className="relative text-sm text-gray-600 font-semibold bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-200">
+                <div className="relative text-xs sm:text-sm text-gray-600 font-semibold bg-white/80 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border border-gray-200 text-center">
                   Shfaqen {((currentPage - 1) * 9) + 1} - {Math.min(currentPage * 9, totalProducts)} nga {totalProducts} produkte
                 </div>
-                <div className="relative flex items-center gap-2 flex-wrap justify-center">
+                <div className="relative flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`px-4 py-2 rounded-xl font-semibold transition-all transform ${
+                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all transform ${
                       currentPage === 1
                         ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                         : 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 hover:scale-105 shadow-lg hover:shadow-xl'
                     }`}
                   >
-                    ← Para
+                    <span className="hidden sm:inline">← Para</span>
+                    <span className="sm:hidden">←</span>
                   </button>
                   
                   <div className="flex items-center gap-1 flex-wrap justify-center">
@@ -781,7 +681,7 @@ export default function Products() {
                           <button
                             key={pageNum}
                             onClick={() => handlePageChange(pageNum)}
-                            className={`w-10 h-10 rounded-xl font-semibold transition-all transform ${
+                            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-semibold text-xs sm:text-sm transition-all transform ${
                               currentPage === pageNum
                                 ? 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white shadow-lg scale-110'
                                 : 'bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105'
@@ -798,12 +698,12 @@ export default function Products() {
                           <>
                             <button
                               onClick={() => handlePageChange(1)}
-                              className="w-10 h-10 rounded-xl font-semibold bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105 transition-all transform"
+                              className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-semibold text-xs sm:text-sm bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105 transition-all transform"
                             >
                               1
                             </button>
                             {currentPage > 5 && (
-                              <span className="px-2 text-gray-500">...</span>
+                              <span className="px-1 sm:px-2 text-gray-500 text-xs sm:text-sm">...</span>
                             )}
                           </>
                         )}
@@ -824,7 +724,7 @@ export default function Products() {
                             <button
                               key={pageNum}
                               onClick={() => handlePageChange(pageNum)}
-                              className={`w-10 h-10 rounded-xl font-semibold transition-all transform ${
+                              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-semibold text-xs sm:text-sm transition-all transform ${
                                 currentPage === pageNum
                                   ? 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white shadow-lg scale-110'
                                   : 'bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105'
@@ -838,11 +738,11 @@ export default function Products() {
                         {currentPage < totalPages - 3 && (
                           <>
                             {currentPage < totalPages - 4 && (
-                              <span className="px-2 text-gray-500">...</span>
+                              <span className="px-1 sm:px-2 text-gray-500 text-xs sm:text-sm">...</span>
                             )}
                             <button
                               onClick={() => handlePageChange(totalPages)}
-                              className="w-10 h-10 rounded-xl font-semibold bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105 transition-all transform"
+                              className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-semibold text-xs sm:text-sm bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105 transition-all transform"
                             >
                               {totalPages}
                             </button>
@@ -855,13 +755,14 @@ export default function Products() {
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`px-4 py-2 rounded-xl font-semibold transition-all transform ${
+                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all transform ${
                       currentPage === totalPages
                         ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                         : 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 hover:scale-105 shadow-lg hover:shadow-xl'
                     }`}
                   >
-                    Tjetër →
+                    <span className="hidden sm:inline">Tjetër →</span>
+                    <span className="sm:hidden">→</span>
                   </button>
                 </div>
               </div>
@@ -880,20 +781,28 @@ export default function Products() {
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent animate-pulse"></div>
         
         {/* Subtle Floating Particles */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-0.5 h-0.5 bg-green-400 rounded-full opacity-20 animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${3 + Math.random() * 2}s`
-              }}
-            ></div>
-          ))}
-        </div>
+        {isMounted && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(6)].map((_, i) => {
+              const left = Math.random() * 100;
+              const top = Math.random() * 100;
+              const delay = Math.random() * 3;
+              const duration = 3 + Math.random() * 2;
+              return (
+                <div
+                  key={i}
+                  className="absolute w-0.5 h-0.5 bg-green-400 rounded-full opacity-20 animate-float"
+                  style={{
+                    left: `${left}%`,
+                    top: `${top}%`,
+                    animationDelay: `${delay}s`,
+                    animationDuration: `${duration}s`
+                  }}
+                ></div>
+              );
+            })}
+          </div>
+        )}
         
         <div className="container mx-auto px-3 sm:px-4 relative z-10">
           <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4">
@@ -1005,16 +914,26 @@ export default function Products() {
               <span className="relative z-10 break-words">
                 &copy; 2025 FshatiBio. Të gjitha të drejtat e rezervuara.
               </span>
-              <span className="absolute inset-0 text-green-400 blur-sm opacity-0 group-hover:opacity-30 transition-opacity duration-300">
+              <span className="absolute inset-0 text-green-400 blur-sm opacity-0 group-hover:opacity-50 transition-opacity duration-300">
                 &copy; 2025 FshatiBio. Të gjitha të drejtat e rezervuara.
               </span>
             </p>
           </div>
         </div>
         
-        {/* Bottom Glow Effect */}
-        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-green-400/10 to-transparent pointer-events-none"></div>
+        {/* Subtle Bottom Glow */}
+        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-green-500/5 to-transparent pointer-events-none"></div>
       </footer>
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+          duration={3000}
+        />
+      )}
       </div>
     </div>
   );

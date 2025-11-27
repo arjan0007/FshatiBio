@@ -222,6 +222,12 @@ router.post('/', authenticateToken, [
         console.error('Error sending order confirmation email:', err);
       });
 
+      // Create notification for order creation
+      const { notifyOrderStatusChange } = require('../services/notificationService');
+      notifyOrderStatusChange(order.id, 'pending').catch(err => {
+        console.error('Error sending order creation notification:', err);
+      });
+
       res.status(201).json({
         success: true,
         data: {

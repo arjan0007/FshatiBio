@@ -212,12 +212,13 @@ router.delete('/:id', authenticateToken, async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const result = await pool.query(
-      'DELETE FROM addresses WHERE id = $1 AND user_id = $2 RETURNING id',
+    // First, verify address belongs to user
+    const addressResult = await pool.query(
+      'SELECT id FROM addresses WHERE id = $1 AND user_id = $2',
       [id, req.user.userId]
     );
 
-    if (result.rows.length === 0) {
+    if (addressResult.rows.length === 0) {
       return res.status(404).json({
         success: false,
         error: {
@@ -227,11 +228,46 @@ router.delete('/:id', authenticateToken, async (req, res, next) => {
       });
     }
 
+    // Check if address is used in any orders
+    const ordersResult = await pool.query(
+      'SELECT COUNT(*) as count FROM orders WHERE address_id = $1',
+      [id]
+    );
+
+    const orderCount = parseInt(ordersResult.rows[0].count);
+
+    if (orderCount > 0) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'ADDRESS_IN_USE',
+          message: `Kjo adresë nuk mund të fshihet sepse është e lidhur me ${orderCount} porosi. Ju lutem fshini ose ndryshoni porositë që përdorin këtë adresë para se ta fshini.`,
+          order_count: orderCount
+        }
+      });
+    }
+
+    // Delete the address
+    const result = await pool.query(
+      'DELETE FROM addresses WHERE id = $1 AND user_id = $2 RETURNING id',
+      [id, req.user.userId]
+    );
+
     res.json({
       success: true,
       message: 'Address deleted successfully'
     });
   } catch (error) {
+    // Handle foreign key constraint error
+    if (error.code === '23503') {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'ADDRESS_IN_USE',
+          message: 'Kjo adresë nuk mund të fshihet sepse është e lidhur me porosi. Ju lutem fshini ose ndryshoni porositë që përdorin këtë adresë para se ta fshini.'
+        }
+      });
+    }
     next(error);
   }
 });

@@ -54,6 +54,26 @@ router.get('/dashboard', async (req, res, next) => {
   }
 });
 
+// GET /api/admin/orders/unread-count
+router.get('/orders/unread-count', async (req, res, next) => {
+  try {
+    const result = await pool.query(
+      `SELECT COUNT(*) as unread_count
+       FROM orders
+       WHERE admin_viewed_at IS NULL`
+    );
+
+    res.json({
+      success: true,
+      data: {
+        unread_count: parseInt(result.rows[0].unread_count)
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GET /api/admin/orders
 router.get('/orders', async (req, res, next) => {
   try {
@@ -71,7 +91,9 @@ router.get('/orders', async (req, res, next) => {
         o.delivery_date,
         u.first_name || ' ' || u.last_name as customer_name,
         u.email as customer_email,
-        o.created_at
+        o.created_at,
+        o.admin_viewed_at,
+        CASE WHEN o.admin_viewed_at IS NULL THEN true ELSE false END as is_unread
       FROM orders o
       JOIN users u ON o.user_id = u.id
     `;
@@ -88,6 +110,17 @@ router.get('/orders', async (req, res, next) => {
     params.push(limit, offset);
 
     const result = await pool.query(query, params);
+
+    // Mark orders as viewed when admin fetches them
+    const orderIds = result.rows.map(row => row.id);
+    if (orderIds.length > 0) {
+      await pool.query(
+        `UPDATE orders 
+         SET admin_viewed_at = NOW() 
+         WHERE id = ANY($1::uuid[]) AND admin_viewed_at IS NULL`,
+        [orderIds]
+      );
+    }
 
     res.json({
       success: true,
