@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Backend API",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "backend",
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "Web (Next.js)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "dev"],
+      "cwd": "web",
+      "port": 3001,
+      "autoPort": true
+    },
+    {
+      "name": "Admin Panel (Next.js)",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "dev"],
+      "cwd": "admin",
+      "port": 3002,
+      "autoPort": true
+    }
+  ]
+}
