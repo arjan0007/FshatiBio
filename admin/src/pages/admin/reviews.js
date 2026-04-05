@@ -115,8 +115,8 @@ export default function AdminReviews() {
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Duke ngarkuar vlerësimet...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-forest-100 border-t-forest-600 mx-auto mb-4"></div>
+            <p className="text-forest-600 font-sans">Duke ngarkuar vlerësimet...</p>
           </div>
         </div>
       </AdminLayout>
@@ -132,211 +132,160 @@ export default function AdminReviews() {
       <div>
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-            <span className="text-4xl">⭐</span>
-            <span>Menaxho Vlerësimet</span>
-          </h1>
-          <p className="text-gray-600">Shiko dhe menaxho vlerësimet e produkteve</p>
+          <h1 className="font-display text-2xl text-forest-900 font-bold mb-1">Menaxho Vlerësimet</h1>
+          <p className="text-forest-600 font-sans text-sm">Shiko dhe menaxho vlerësimet e produkteve</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Total Vlerësimet</p>
-                <p className="text-3xl font-bold text-gray-900">{pagination.total}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">⭐</span>
-              </div>
-            </div>
+          <div className="bg-gradient-to-br from-forest-800 to-forest-600 text-white rounded-2xl p-6">
+            <p className="text-white/80 text-sm font-medium font-sans">Total Vlerësimet</p>
+            <p className="font-display text-3xl font-bold mt-1">{pagination.total}</p>
           </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Të Aprovuara</p>
-                <p className="text-3xl font-bold text-green-600">
-                  {reviews.filter(r => r.is_approved).length}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">✅</span>
-              </div>
-            </div>
+          <div className="bg-gradient-to-br from-forest-700 to-forest-500 text-white rounded-2xl p-6">
+            <p className="text-white/80 text-sm font-medium font-sans">Të Aprovuara</p>
+            <p className="font-display text-3xl font-bold mt-1">{reviews.filter(r => r.is_approved).length}</p>
           </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Në Pritje</p>
-                <p className="text-3xl font-bold text-yellow-600">
-                  {reviews.filter(r => !r.is_approved).length}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">⏳</span>
-              </div>
-            </div>
+          <div className="bg-gradient-to-br from-amber-600 to-amber-400 text-white rounded-2xl p-6">
+            <p className="text-white/80 text-sm font-medium font-sans">Në Pritje</p>
+            <p className="font-display text-3xl font-bold mt-1">{reviews.filter(r => !r.is_approved).length}</p>
           </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Mesatarja</p>
-                <p className="text-3xl font-bold text-purple-600">
-                  {reviews.length > 0 
-                    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-                    : '0.0'}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">📊</span>
-              </div>
-            </div>
+          <div className="bg-gradient-to-br from-purple-700 to-purple-500 text-white rounded-2xl p-6">
+            <p className="text-white/80 text-sm font-medium font-sans">Mesatarja</p>
+            <p className="font-display text-3xl font-bold mt-1">
+              {reviews.length > 0
+                ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+                : '0.0'}
+            </p>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border-2 border-gray-100">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <span className="text-xl">🔍</span>
-            </div>
-            <h2 className="text-xl font-bold text-gray-900">Filtrat</h2>
+        <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-4 flex flex-wrap gap-3 items-center mb-6">
+          <div className="flex-1 min-w-[160px]">
+            <select
+              value={filters.is_approved}
+              onChange={(e) => {
+                setFilters({ ...filters, is_approved: e.target.value });
+                setPagination({ ...pagination, page: 1 });
+              }}
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
+            >
+              <option value="">Të gjitha statuset</option>
+              <option value="true">Të aprovuara</option>
+              <option value="false">Të paaprovuara</option>
+            </select>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Statusi</label>
-              <select
-                value={filters.is_approved}
-                onChange={(e) => {
-                  setFilters({ ...filters, is_approved: e.target.value });
-                  setPagination({ ...pagination, page: 1 });
-                }}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-              >
-                <option value="">Të gjitha</option>
-                <option value="true">Të aprovuara</option>
-                <option value="false">Të paaprovuara</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Vlerësimi</label>
-              <select
-                value={filters.rating}
-                onChange={(e) => {
-                  setFilters({ ...filters, rating: e.target.value });
-                  setPagination({ ...pagination, page: 1 });
-                }}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-              >
-                <option value="">Të gjitha</option>
-                <option value="5">5 ⭐</option>
-                <option value="4">4 ⭐</option>
-                <option value="3">3 ⭐</option>
-                <option value="2">2 ⭐</option>
-                <option value="1">1 ⭐</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Produkti (ID)</label>
-              <input
-                type="text"
-                value={filters.product_id}
-                onChange={(e) => {
-                  setFilters({ ...filters, product_id: e.target.value });
-                  setPagination({ ...pagination, page: 1 });
-                }}
-                placeholder="ID e produktit"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-              />
-            </div>
+          <div className="flex-1 min-w-[140px]">
+            <select
+              value={filters.rating}
+              onChange={(e) => {
+                setFilters({ ...filters, rating: e.target.value });
+                setPagination({ ...pagination, page: 1 });
+              }}
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
+            >
+              <option value="">Të gjitha vlerësimet</option>
+              <option value="5">5 yje</option>
+              <option value="4">4 yje</option>
+              <option value="3">3 yje</option>
+              <option value="2">2 yje</option>
+              <option value="1">1 yll</option>
+            </select>
+          </div>
+          <div className="flex-1 min-w-[160px]">
+            <input
+              type="text"
+              value={filters.product_id}
+              onChange={(e) => {
+                setFilters({ ...filters, product_id: e.target.value });
+                setPagination({ ...pagination, page: 1 });
+              }}
+              placeholder="ID e produktit"
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
+            />
           </div>
         </div>
 
         {/* Reviews List */}
         {reviews.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <div className="text-6xl mb-4">⭐</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Nuk ka vlerësime</h2>
-            <p className="text-gray-600">Nuk u gjetën vlerësime që përputhen me filtrat</p>
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-12 text-center">
+            <svg className="w-16 h-16 text-forest-200 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            </svg>
+            <h2 className="font-display text-xl text-forest-900 font-bold mb-2">Nuk ka vlerësime</h2>
+            <p className="text-forest-600 font-sans">Nuk u gjetën vlerësime që përputhen me filtrat</p>
           </div>
         ) : (
           <>
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-              <h2 className="text-xl font-bold text-gray-900">
+            <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-4 mb-5">
+              <h2 className="font-display text-lg text-forest-900 font-semibold">
                 Vlerësimet ({pagination.total})
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 mb-6">
+            <div className="space-y-4 mb-6">
               {reviews.map((review, index) => (
                 <div
                   key={review.id}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-2 border-gray-100 overflow-hidden animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 overflow-hidden hover:shadow-[0_4px_24px_rgba(29,78,53,0.1)] transition-all"
                 >
-                  <div className="p-6">
-                    <div className="flex flex-col lg:flex-row gap-6">
+                  <div className="p-5">
+                    <div className="flex flex-col lg:flex-row gap-5">
                       {/* Left Side - Product & User Info */}
                       <div className="flex-1">
-                        <div className="flex items-start gap-4 mb-4">
-                          <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <span className="text-3xl">📦</span>
+                        <div className="flex items-start gap-3 mb-4">
+                          <div className="w-12 h-12 bg-gradient-to-br from-forest-400 to-forest-700 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
                           </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold text-gray-900 mb-1">
+                          <div>
+                            <h3 className="font-display text-base font-bold text-forest-900">
                               {review.product_name}
                             </h3>
-                            <p className="text-sm text-gray-500">ID: {review.product_id}</p>
+                            <p className="text-xs text-forest-400 font-sans">ID: {review.product_id}</p>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-lg">👤</span>
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-forest-400 to-forest-700 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                            {review.user_name?.charAt(0) || 'U'}
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900">{review.user_name}</p>
-                            <p className="text-sm text-gray-500">{review.user_email}</p>
+                            <p className="font-semibold text-forest-900 font-sans text-sm">{review.user_name}</p>
+                            <p className="text-xs text-forest-400 font-sans">{review.user_email}</p>
                           </div>
                         </div>
                       </div>
 
                       {/* Right Side - Rating & Status */}
-                      <div className="lg:w-64">
-                        <div className="mb-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="text-2xl text-yellow-500">
-                              {renderStars(review.rating)}
-                            </div>
-                            <span className="text-lg font-bold text-gray-900">
-                              {review.rating}/5
-                            </span>
+                      <div className="lg:w-56">
+                        <div className="mb-3">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="text-xl text-honey-400 tracking-tight">{renderStars(review.rating)}</span>
+                            <span className="text-sm font-bold text-forest-900 font-sans">{review.rating}/5</span>
                           </div>
                           {review.is_verified_purchase && (
-                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                              <span>✓</span>
-                              <span>Blerje e Verifikuar</span>
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-forest-100 text-forest-700 border border-forest-200 rounded-full text-xs font-bold">
+                              Blerje e Verifikuar
                             </span>
                           )}
                         </div>
 
-                        <div className="mb-4">
+                        <div className="mb-3">
                           {review.is_approved ? (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 border-2 border-green-300">
-                              ✓ Aprovuar
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-forest-100 text-forest-800 border border-forest-200">
+                              Aprovuar
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 border-2 border-yellow-300">
-                              ⏳ Në Pritje
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                              Në Pritje
                             </span>
                           )}
                         </div>
 
-                        <p className="text-sm text-gray-500 mb-4">
+                        <p className="text-xs text-forest-400 font-sans">
                           {new Date(review.created_at).toLocaleDateString('sq-AL', {
                             day: 'numeric',
                             month: 'long',
@@ -347,39 +296,36 @@ export default function AdminReviews() {
                     </div>
 
                     {/* Review Content */}
-                    <div className="border-t border-gray-200 pt-4 mt-4">
+                    <div className="border-t border-forest-100 pt-4 mt-3">
                       {review.title && (
-                        <h4 className="text-lg font-bold text-gray-900 mb-2">{review.title}</h4>
+                        <h4 className="font-display text-base font-bold text-forest-900 mb-1.5">{review.title}</h4>
                       )}
-                      <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                      <p className="text-forest-700 font-sans text-sm leading-relaxed">{review.comment}</p>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2 mt-6 pt-4 border-t border-gray-200">
+                    <div className="flex gap-2 mt-4 pt-4 border-t border-forest-100">
                       {!review.is_approved && (
                         <button
                           onClick={() => handleApprove(review.id)}
-                          className="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2.5 rounded-lg hover:bg-green-700 transition-all font-medium"
+                          className="flex-1 bg-forest-700 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all text-sm font-sans"
                         >
-                          <span>✓</span>
-                          <span>Aprovo</span>
+                          Aprovo
                         </button>
                       )}
                       {review.is_approved && (
                         <button
                           onClick={() => handleReject(review.id)}
-                          className="flex-1 flex items-center justify-center gap-2 bg-yellow-600 text-white px-4 py-2.5 rounded-lg hover:bg-yellow-700 transition-all font-medium"
+                          className="flex-1 bg-honey-500 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-honey-600 transition-all text-sm font-sans"
                         >
-                          <span>↩️</span>
-                          <span>Refuzo</span>
+                          Refuzo
                         </button>
                       )}
                       <button
                         onClick={() => handleDelete(review.id)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-2.5 rounded-lg hover:bg-red-700 transition-all font-medium"
+                        className="flex-1 bg-red-600 text-white px-4 py-2.5 rounded-xl font-semibold hover:bg-red-700 transition-all text-sm font-sans"
                       >
-                        <span>🗑️</span>
-                        <span>Fshi</span>
+                        Fshi
                       </button>
                     </div>
                   </div>
@@ -389,10 +335,10 @@ export default function AdminReviews() {
 
             {/* Pagination */}
             {pagination.totalPages > 1 && (
-              <div className="bg-white rounded-xl shadow-lg p-6 flex items-center justify-between">
-                <div className="text-sm text-gray-700 font-medium">
-                  Faqja <span className="font-bold text-gray-900">{pagination.page}</span> nga{' '}
-                  <span className="font-bold text-gray-900">{pagination.totalPages}</span>
+              <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-4 flex items-center justify-between">
+                <div className="text-sm text-forest-700 font-sans">
+                  Faqja <span className="font-bold text-forest-900">{pagination.page}</span> nga{' '}
+                  <span className="font-bold text-forest-900">{pagination.totalPages}</span>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -400,7 +346,7 @@ export default function AdminReviews() {
                       setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })
                     }
                     disabled={pagination.page === 1}
-                    className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 rounded-xl border border-forest-200 text-forest-700 hover:bg-forest-50 transition-all text-sm font-sans disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     ← Paraardhës
                   </button>
@@ -412,7 +358,7 @@ export default function AdminReviews() {
                       })
                     }
                     disabled={pagination.page === pagination.totalPages}
-                    className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 rounded-xl border border-forest-200 text-forest-700 hover:bg-forest-50 transition-all text-sm font-sans disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Tjetra →
                   </button>
@@ -425,4 +371,3 @@ export default function AdminReviews() {
     </AdminLayout>
   );
 }
-

@@ -238,7 +238,7 @@ export default function ProductsManagement() {
   const filteredProducts = products.filter(product => {
     const matchesSearch = !searchTerm || product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !selectedCategory || product.category_id === selectedCategory;
-    const matchesStatus = statusFilter === 'all' || 
+    const matchesStatus = statusFilter === 'all' ||
       (statusFilter === 'active' && product.is_active) ||
       (statusFilter === 'inactive' && !product.is_active);
     return matchesSearch && matchesCategory && matchesStatus;
@@ -253,10 +253,10 @@ export default function ProductsManagement() {
 
   if (loading && products.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-[#f0faf4]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Duke ngarkuar produkte...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-forest-100 border-t-forest-600 mx-auto mb-4"></div>
+          <p className="text-forest-700 font-medium font-sans">Duke ngarkuar produkte...</p>
         </div>
       </div>
     );
@@ -270,10 +270,12 @@ export default function ProductsManagement() {
 
       {/* Toast Notification */}
       {toast.show && (
-        <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transform transition-all duration-300 ${
-          toast.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+        <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-2xl shadow-xl transform transition-all duration-300 ${
+          toast.type === 'success'
+            ? 'bg-forest-700 text-white'
+            : 'bg-red-600 text-white'
         }`}>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 font-sans font-semibold">
             <span>{toast.type === 'success' ? '✓' : '✕'}</span>
             <span>{toast.message}</span>
           </div>
@@ -285,8 +287,8 @@ export default function ProductsManagement() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-4xl font-bold text-gray-800 mb-2">Menaxho Produktet</h1>
-              <p className="text-gray-600">Menaxhoni produktet e platformës</p>
+              <h1 className="font-display text-2xl text-forest-900 font-bold mb-1">Menaxho Produktet</h1>
+              <p className="text-forest-600 font-sans text-sm">Menaxhoni produktet e platformës</p>
             </div>
             <button
               onClick={() => {
@@ -294,100 +296,75 @@ export default function ProductsManagement() {
                 resetForm();
                 setShowModal(true);
               }}
-              className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 font-semibold flex items-center gap-2"
+              className="bg-forest-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all flex items-center gap-2 font-sans"
             >
-              <span className="text-xl">+</span>
+              <span className="text-lg font-bold">+</span>
               <span>Produkt i Ri</span>
             </button>
           </div>
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium">Total Produkte</p>
-                  <p className="text-3xl font-bold text-gray-800 mt-1">{stats.total}</p>
-                </div>
-                <div className="text-4xl">📦</div>
-              </div>
+            <div className="bg-gradient-to-br from-forest-800 to-forest-600 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Total Produkte</p>
+              <p className="font-display text-3xl font-bold mt-1">{stats.total}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium">Aktivë</p>
-                  <p className="text-3xl font-bold text-gray-800 mt-1">{stats.active}</p>
-                </div>
-                <div className="text-4xl">✅</div>
-              </div>
+            <div className="bg-gradient-to-br from-forest-700 to-forest-500 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Aktivë</p>
+              <p className="font-display text-3xl font-bold mt-1">{stats.active}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium">Stok i Ulët</p>
-                  <p className="text-3xl font-bold text-gray-800 mt-1">{stats.lowStock}</p>
-                </div>
-                <div className="text-4xl">⚠️</div>
-              </div>
+            <div className="bg-gradient-to-br from-amber-600 to-amber-400 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Stok i Ulët</p>
+              <p className="font-display text-3xl font-bold mt-1">{stats.lowStock}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium">Pa Stok</p>
-                  <p className="text-3xl font-bold text-gray-800 mt-1">{stats.outOfStock}</p>
-                </div>
-                <div className="text-4xl">❌</div>
-              </div>
+            <div className="bg-gradient-to-br from-red-600 to-red-400 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Pa Stok</p>
+              <p className="font-display text-3xl font-bold mt-1">{stats.outOfStock}</p>
             </div>
           </div>
 
           {/* Filters */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Kërko</label>
-                <input
-                  type="text"
-                  placeholder="Kërko produkte..."
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Kategoria</label>
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => {
-                    setSelectedCategory(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                >
-                  <option value="">Të gjitha kategoritë</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Statusi</label>
-                <select
-                  value={statusFilter}
-                  onChange={(e) => {
-                    setStatusFilter(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                >
-                  <option value="all">Të gjitha</option>
-                  <option value="active">Aktivë</option>
-                  <option value="inactive">Inaktivë</option>
-                </select>
-              </div>
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-4 flex flex-wrap gap-3 items-center mb-6">
+            <div className="flex-1 min-w-[180px]">
+              <input
+                type="text"
+                placeholder="Kërko produkte..."
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
+              />
+            </div>
+            <div className="flex-1 min-w-[160px]">
+              <select
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
+              >
+                <option value="">Të gjitha kategoritë</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1 min-w-[140px]">
+              <select
+                value={statusFilter}
+                onChange={(e) => {
+                  setStatusFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
+              >
+                <option value="all">Të gjitha</option>
+                <option value="active">Aktivë</option>
+                <option value="inactive">Inaktivë</option>
+              </select>
             </div>
           </div>
         </div>
@@ -395,14 +372,14 @@ export default function ProductsManagement() {
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-8">
               {filteredProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+                  className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 hover:shadow-[0_4px_24px_rgba(29,78,53,0.13)] transition-all duration-300 overflow-hidden"
                 >
                   {/* Product Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200">
+                  <div className="relative h-44 bg-forest-50">
                     {product.image_urls && product.image_urls.length > 0 ? (
                       <img
                         src={product.image_urls[0]}
@@ -410,22 +387,24 @@ export default function ProductsManagement() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-6xl">
-                        📦
+                      <div className="w-full h-full flex items-center justify-center">
+                        <svg className="w-16 h-16 text-forest-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
                       </div>
                     )}
                     <div className="absolute top-2 right-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                         product.is_active
-                          ? 'bg-green-500 text-white'
-                          : 'bg-red-500 text-white'
+                          ? 'bg-forest-100 text-forest-800 border border-forest-200'
+                          : 'bg-red-100 text-red-800 border border-red-200'
                       }`}>
                         {product.is_active ? 'Aktiv' : 'Inaktiv'}
                       </span>
                     </div>
                     {product.is_bio && (
                       <div className="absolute top-2 left-2">
-                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-white">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-honey-500 text-white">
                           BIO
                         </span>
                       </div>
@@ -433,22 +412,22 @@ export default function ProductsManagement() {
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-5">
-                    <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2">{product.name}</h3>
-                    <p className="text-sm text-gray-600 mb-3">{product.category_name || '-'}</p>
+                  <div className="p-4">
+                    <h3 className="font-display text-base font-bold text-forest-900 mb-1 line-clamp-2">{product.name}</h3>
+                    <p className="text-xs text-forest-500 font-sans mb-3">{product.category_name || '-'}</p>
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <p className="text-2xl font-bold text-green-600">{product.price} L</p>
-                        <p className="text-xs text-gray-500">/{product.unit}</p>
+                        <p className="font-display text-xl font-bold text-forest-700">{product.price} L</p>
+                        <p className="text-xs text-forest-400 font-sans">/{product.unit}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600">Stoku</p>
-                        <p className={`text-lg font-semibold ${
+                        <p className="text-xs text-forest-500 font-sans">Stoku</p>
+                        <p className={`text-base font-bold font-display ${
                           product.stock_quantity === 0
                             ? 'text-red-600'
                             : product.stock_quantity < 10
-                            ? 'text-yellow-600'
-                            : 'text-green-600'
+                            ? 'text-amber-600'
+                            : 'text-forest-600'
                         }`}>
                           {product.stock_quantity}
                         </p>
@@ -459,13 +438,13 @@ export default function ProductsManagement() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleEdit(product)}
-                        className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm"
+                        className="flex-1 border-2 border-forest-600 text-forest-700 px-3 py-2 rounded-xl font-semibold hover:bg-forest-50 transition-all text-sm font-sans"
                       >
                         Edito
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors font-medium text-sm"
+                        className="flex-1 bg-red-600 text-white px-3 py-2 rounded-xl font-semibold hover:bg-red-700 transition-all text-sm font-sans"
                       >
                         Fshi
                       </button>
@@ -481,7 +460,7 @@ export default function ProductsManagement() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 bg-white rounded-lg shadow hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-xl border border-forest-200 text-forest-700 hover:bg-forest-50 transition-all text-sm disabled:opacity-40 disabled:cursor-not-allowed font-sans"
                 >
                   ←
                 </button>
@@ -489,10 +468,10 @@ export default function ProductsManagement() {
                   <button
                     key={i + 1}
                     onClick={() => setCurrentPage(i + 1)}
-                    className={`px-4 py-2 rounded-lg ${
+                    className={`px-3 py-1.5 rounded-xl border text-sm font-sans transition-all ${
                       currentPage === i + 1
-                        ? 'bg-green-500 text-white'
-                        : 'bg-white hover:shadow-lg'
+                        ? 'bg-forest-700 text-white border-forest-700'
+                        : 'border-forest-200 text-forest-700 hover:bg-forest-50'
                     }`}
                   >
                     {i + 1}
@@ -501,7 +480,7 @@ export default function ProductsManagement() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 bg-white rounded-lg shadow hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-xl border border-forest-200 text-forest-700 hover:bg-forest-50 transition-all text-sm disabled:opacity-40 disabled:cursor-not-allowed font-sans"
                 >
                   →
                 </button>
@@ -509,18 +488,20 @@ export default function ProductsManagement() {
             )}
           </>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <div className="text-6xl mb-4">📦</div>
-            <p className="text-xl text-gray-600">Nuk u gjetën produkte</p>
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-12 text-center">
+            <svg className="w-16 h-16 text-forest-200 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+            <p className="text-forest-600 font-sans text-lg font-medium">Nuk u gjetën produkte</p>
           </div>
         )}
 
         {/* Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-gray-800">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl shadow-[0_24px_64px_rgba(29,78,53,0.22)] p-6 md:p-8 w-full max-w-xl max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-display text-xl text-forest-900 font-bold">
                   {editingProduct ? 'Edito Produkt' : 'Produkt i Ri'}
                 </h3>
                 <button
@@ -529,44 +510,43 @@ export default function ProductsManagement() {
                     setEditingProduct(null);
                     resetForm();
                   }}
-                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-forest-50 text-forest-600 hover:bg-forest-100 transition-colors text-lg font-bold"
                 >
                   ×
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-6 space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Emri i Produktit *</label>
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Emri i Produktit *</label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                     required
                     placeholder="Shkruani emrin e produktit"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Përshkrimi</label>
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Përshkrimi</label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    rows={4}
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors resize-none"
+                    rows={3}
                     placeholder="Përshkrimi i produktit..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Fotot e Produktit</label>
-                  <p className="text-sm text-gray-500 mb-3">Maksimumi 5 foto. Formatet e lejuara: JPG, PNG, WEBP (deri në 5MB secila).</p>
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Fotot e Produktit</label>
+                  <p className="text-xs text-forest-500 mb-2 font-sans">Maksimumi 5 foto. Formatet e lejuara: JPG, PNG, WEBP (deri në 5MB secila).</p>
                   {uploadError && (
-                    <p className="text-sm text-red-600 mb-2 bg-red-50 p-2 rounded">{uploadError}</p>
+                    <p className="text-sm text-red-600 mb-2 bg-red-50 p-2 rounded-xl font-sans">{uploadError}</p>
                   )}
-                  
-                  {/* Drag & Drop Zone */}
+
                   {(formData.image_urls?.length || 0) < 5 && (
                     <div
                       onDrop={handleDrop}
@@ -574,70 +554,61 @@ export default function ProductsManagement() {
                       onDragEnter={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        e.currentTarget.classList.add('border-green-500', 'bg-green-50');
+                        e.currentTarget.classList.add('border-forest-400', 'bg-forest-50');
                       }}
                       onDragLeave={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        e.currentTarget.classList.remove('border-green-500', 'bg-green-50');
+                        e.currentTarget.classList.remove('border-forest-400', 'bg-forest-50');
                       }}
-                      className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center mb-4 transition-colors hover:border-green-500 hover:bg-green-50"
+                      className="border-2 border-dashed border-forest-200 rounded-xl p-6 text-center mb-3 transition-colors hover:border-forest-400 hover:bg-forest-50 cursor-pointer"
                     >
-                      <div className="flex flex-col items-center gap-3">
-                        <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="flex flex-col items-center gap-2">
+                        <svg className="w-10 h-10 text-forest-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
-                        <div>
-                          <p className="text-sm font-medium text-gray-700">
-                            Tërhiq dhe lësho foto këtu, ose
-                            <label className="text-green-600 hover:text-green-700 cursor-pointer ml-1">
-                              kliko për të zgjedhur
-                              <input
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                onChange={handleFileInputChange}
-                                className="hidden"
-                              />
-                            </label>
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            PNG, JPG, WEBP deri në 5MB secila
-                          </p>
-                        </div>
+                        <p className="text-sm font-medium text-forest-700 font-sans">
+                          Tërhiq dhe lësho foto këtu, ose{' '}
+                          <label className="text-forest-600 hover:text-forest-800 cursor-pointer underline">
+                            kliko për të zgjedhur
+                            <input
+                              type="file"
+                              accept="image/*"
+                              multiple
+                              onChange={handleFileInputChange}
+                              className="hidden"
+                            />
+                          </label>
+                        </p>
+                        <p className="text-xs text-forest-400 font-sans">PNG, JPG, WEBP deri në 5MB secila</p>
                       </div>
                     </div>
                   )}
 
-                  {/* Image Preview Grid */}
                   {(formData.image_urls || []).length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                       {(formData.image_urls || []).map((url, index) => (
                         <div key={url} className="relative group">
-                          <img 
-                            src={url} 
-                            alt={`Foto ${index + 1}`} 
-                            className="w-full h-32 object-cover rounded-lg border-2 border-gray-200 shadow-sm hover:shadow-md transition-shadow" 
+                          <img
+                            src={url}
+                            alt={`Foto ${index + 1}`}
+                            className="w-full h-32 object-cover rounded-xl border border-forest-100"
                           />
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(url)}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-lg"
-                            title="Hiq foto"
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow"
                           >
                             ×
                           </button>
-                          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs py-1 px-2 rounded-b-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                            Foto {index + 1}
-                          </div>
                         </div>
                       ))}
                     </div>
                   )}
-                  
+
                   {uploadingImages && (
-                    <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
-                      <svg className="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <div className="mt-3 flex items-center justify-center gap-2 text-sm text-forest-600 bg-forest-50 p-3 rounded-xl font-sans">
+                      <svg className="animate-spin h-4 w-4 text-forest-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
@@ -648,11 +619,11 @@ export default function ProductsManagement() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Kategoria *</label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Kategoria *</label>
                     <select
                       value={formData.category_id}
                       onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       required
                     >
                       <option value="">Zgjidh kategori</option>
@@ -662,13 +633,13 @@ export default function ProductsManagement() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Çmimi (L) *</label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Çmimi (L) *</label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       required
                       placeholder="0.00"
                     />
@@ -677,11 +648,11 @@ export default function ProductsManagement() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Njësia *</label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Njësia *</label>
                     <select
                       value={formData.unit}
                       onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       required
                     >
                       <option value="kg">kg</option>
@@ -690,12 +661,12 @@ export default function ProductsManagement() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Stoku *</label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Stoku *</label>
                     <input
                       type="number"
                       value={formData.stock_quantity}
                       onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       required
                       placeholder="0"
                     />
@@ -704,22 +675,22 @@ export default function ProductsManagement() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Origjina</label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Origjina</label>
                     <input
                       type="text"
                       value={formData.origin}
                       onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       placeholder="Shkodër, Korçë, etj."
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Afati i freskisë (ditë)</label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Afati i freskisë (ditë)</label>
                     <input
                       type="number"
                       value={formData.freshness_period}
                       onChange={(e) => setFormData({ ...formData, freshness_period: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       placeholder="7"
                     />
                   </div>
@@ -731,25 +702,25 @@ export default function ProductsManagement() {
                       type="checkbox"
                       checked={formData.is_bio}
                       onChange={(e) => setFormData({ ...formData, is_bio: e.target.checked })}
-                      className="w-5 h-5 text-green-600 rounded focus:ring-green-500"
+                      className="accent-forest-700 w-4 h-4 rounded"
                     />
-                    <span className="text-sm font-medium text-gray-700">Produkt BIO</span>
+                    <span className="text-sm font-medium text-forest-700 font-sans">Produkt BIO</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData.is_active}
                       onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                      className="w-5 h-5 text-green-600 rounded focus:ring-green-500"
+                      className="accent-forest-700 w-4 h-4 rounded"
                     />
-                    <span className="text-sm font-medium text-gray-700">Aktiv</span>
+                    <span className="text-sm font-medium text-forest-700 font-sans">Aktiv</span>
                   </label>
                 </div>
 
-                <div className="flex gap-4 pt-4 border-t border-gray-200">
+                <div className="flex gap-3 pt-4 border-t border-forest-100">
                   <button
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all font-semibold shadow-lg"
+                    className="flex-1 bg-forest-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all font-sans"
                   >
                     {editingProduct ? 'Përditëso Produktin' : 'Krijo Produktin'}
                   </button>
@@ -760,7 +731,7 @@ export default function ProductsManagement() {
                       setEditingProduct(null);
                       resetForm();
                     }}
-                    className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+                    className="flex-1 border-2 border-forest-600 text-forest-700 px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-50 transition-all font-sans"
                   >
                     Anulo
                   </button>

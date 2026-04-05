@@ -121,8 +121,8 @@ export default function CouponsManagement() {
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Duke ngarkuar kuponat...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-forest-100 border-t-forest-600 mx-auto mb-4"></div>
+            <p className="text-forest-600 font-sans">Duke ngarkuar kuponat...</p>
           </div>
         </div>
       </AdminLayout>
@@ -139,11 +139,8 @@ export default function CouponsManagement() {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-              <span className="text-4xl">🎫</span>
-              <span>Menaxho Kuponat</span>
-            </h1>
-            <p className="text-gray-600">Krijo dhe menaxho kuponat e zbritjes</p>
+            <h1 className="font-display text-2xl text-forest-900 font-bold mb-1">Menaxho Kuponat</h1>
+            <p className="text-forest-600 font-sans text-sm">Krijo dhe menaxho kuponat e zbritjes</p>
           </div>
           <button
             onClick={() => {
@@ -151,9 +148,9 @@ export default function CouponsManagement() {
               resetForm();
               setShowModal(true);
             }}
-            className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold"
+            className="bg-forest-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all flex items-center gap-2 font-sans"
           >
-            <span className="text-xl">+</span>
+            <span className="text-lg font-bold">+</span>
             <span>Kupon i Ri</span>
           </button>
         </div>
@@ -161,149 +158,117 @@ export default function CouponsManagement() {
         {/* Stats Cards */}
         {coupons.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium mb-1">Total Kuponat</p>
-                  <p className="text-3xl font-bold text-gray-900">{coupons.length}</p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">🎫</span>
-                </div>
-              </div>
+            <div className="bg-gradient-to-br from-forest-800 to-forest-600 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Total Kuponat</p>
+              <p className="font-display text-3xl font-bold mt-1">{coupons.length}</p>
             </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium mb-1">Kuponat Aktive</p>
-                  <p className="text-3xl font-bold text-green-600">
-                    {coupons.filter(c => c.is_active).length}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">✅</span>
-                </div>
-              </div>
+            <div className="bg-gradient-to-br from-forest-700 to-forest-500 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Kuponat Aktive</p>
+              <p className="font-display text-3xl font-bold mt-1">{coupons.filter(c => c.is_active).length}</p>
             </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium mb-1">Përdorime Totale</p>
-                  <p className="text-3xl font-bold text-purple-600">
-                    {coupons.reduce((sum, c) => sum + (c.used_count || 0), 0)}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">📊</span>
-                </div>
-              </div>
+            <div className="bg-gradient-to-br from-purple-700 to-purple-500 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Përdorime Totale</p>
+              <p className="font-display text-3xl font-bold mt-1">
+                {coupons.reduce((sum, c) => sum + (c.used_count || 0), 0)}
+              </p>
             </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium mb-1">Kuponat e Skaduar</p>
-                  <p className="text-3xl font-bold text-red-600">
-                    {coupons.filter(c => {
-                      if (!c.valid_until) return false;
-                      return new Date(c.valid_until) < new Date();
-                    }).length}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">⏰</span>
-                </div>
-              </div>
+            <div className="bg-gradient-to-br from-amber-600 to-amber-400 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Kuponat e Skaduar</p>
+              <p className="font-display text-3xl font-bold mt-1">
+                {coupons.filter(c => {
+                  if (!c.valid_until) return false;
+                  return new Date(c.valid_until) < new Date();
+                }).length}
+              </p>
             </div>
           </div>
         )}
 
         {/* Coupons Grid */}
         {coupons.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <div className="text-6xl mb-4">🎫</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Nuk ka kupon</h2>
-            <p className="text-gray-600 mb-6">Krijo kuponin tënd të parë për të filluar</p>
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-12 text-center">
+            <svg className="w-16 h-16 text-forest-200 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+            </svg>
+            <h2 className="font-display text-xl text-forest-900 font-bold mb-2">Nuk ka kupon</h2>
+            <p className="text-forest-600 font-sans mb-6">Krijo kuponin tënd të parë për të filluar</p>
             <button
               onClick={() => {
                 setEditingCoupon(null);
                 resetForm();
                 setShowModal(true);
               }}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold"
+              className="bg-forest-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all font-sans"
             >
               + Kupon i Ri
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {coupons.map((coupon, index) => {
               const isExpired = coupon.valid_until && new Date(coupon.valid_until) < new Date();
-              const usagePercentage = coupon.usage_limit 
-                ? ((coupon.used_count || 0) / coupon.usage_limit) * 100 
+              const usagePercentage = coupon.usage_limit
+                ? ((coupon.used_count || 0) / coupon.usage_limit) * 100
                 : 0;
-              
+
               return (
                 <div
                   key={coupon.id}
-                  className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 overflow-hidden animate-fade-in ${
-                    isExpired ? 'border-red-200 opacity-75' : coupon.is_active ? 'border-green-100' : 'border-gray-200'
+                  className={`bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border overflow-hidden transition-all duration-300 hover:shadow-[0_4px_24px_rgba(29,78,53,0.13)] ${
+                    isExpired ? 'border-red-100 opacity-75' : coupon.is_active ? 'border-forest-100' : 'border-gray-200'
                   }`}
-                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   {/* Coupon Header */}
                   <div className={`p-6 ${
-                    coupon.type === 'percentage' 
-                      ? 'bg-gradient-to-br from-purple-500 to-indigo-600' 
-                      : 'bg-gradient-to-br from-green-500 to-emerald-600'
+                    coupon.type === 'percentage'
+                      ? 'bg-gradient-to-br from-purple-700 to-indigo-600'
+                      : 'bg-gradient-to-br from-forest-800 to-forest-600'
                   } text-white relative overflow-hidden`}>
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-16 -mt-16"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-10 rounded-full -ml-12 -mb-12"></div>
                     <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                           coupon.is_active && !isExpired
                             ? 'bg-white/20 backdrop-blur-sm'
                             : 'bg-red-500/80'
                         }`}>
-                          {isExpired ? '⏰ Skaduar' : coupon.is_active ? '✓ Aktiv' : '✕ Inaktiv'}
+                          {isExpired ? 'Skaduar' : coupon.is_active ? 'Aktiv' : 'Inaktiv'}
                         </span>
-                        <span className="text-sm opacity-90">
+                        <span className="text-xs text-white/70 font-sans">
                           {coupon.type === 'percentage' ? 'Përqindje' : 'Fikse'}
                         </span>
                       </div>
-                      <div className="text-4xl font-bold mb-2">
-                        {coupon.type === 'percentage' 
+                      <div className="font-display text-4xl font-bold mb-1">
+                        {coupon.type === 'percentage'
                           ? `${coupon.value}%`
                           : `${coupon.value} L`}
                       </div>
-                      <div className="text-2xl font-mono font-bold tracking-wider">
+                      <div className="font-mono text-xl font-bold tracking-widest text-white/90">
                         {coupon.code}
                       </div>
                     </div>
                   </div>
 
                   {/* Coupon Info */}
-                  <div className="p-6">
+                  <div className="p-5">
                     {/* Usage Progress */}
                     {coupon.usage_limit && (
                       <div className="mb-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-gray-700">Përdorime</span>
-                          <span className="text-sm font-bold text-gray-900">
+                        <div className="flex justify-between items-center mb-1.5">
+                          <span className="text-xs font-medium text-forest-700 font-sans">Përdorime</span>
+                          <span className="text-xs font-bold text-forest-900 font-sans">
                             {coupon.used_count || 0} / {coupon.usage_limit}
                           </span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-forest-100 rounded-full h-1.5">
                           <div
-                            className={`h-2 rounded-full transition-all ${
-                              usagePercentage >= 100 
-                                ? 'bg-red-500' 
-                                : usagePercentage >= 80 
-                                ? 'bg-yellow-500' 
-                                : 'bg-green-500'
+                            className={`h-1.5 rounded-full transition-all ${
+                              usagePercentage >= 100
+                                ? 'bg-red-500'
+                                : usagePercentage >= 80
+                                ? 'bg-amber-500'
+                                : 'bg-forest-500'
                             }`}
                             style={{ width: `${Math.min(usagePercentage, 100)}%` }}
                           ></div>
@@ -312,35 +277,35 @@ export default function CouponsManagement() {
                     )}
 
                     {/* Validity */}
-                    <div className="mb-4 space-y-2">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <span>📅</span>
-                        <span>
-                          <span className="font-medium">Nga:</span> {new Date(coupon.valid_from).toLocaleDateString('sq-AL')}
-                        </span>
+                    <div className="mb-3 space-y-1.5">
+                      <div className="flex items-center gap-2 text-xs text-forest-600 font-sans">
+                        <svg className="w-3.5 h-3.5 text-forest-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span><span className="font-medium">Nga:</span> {new Date(coupon.valid_from).toLocaleDateString('sq-AL')}</span>
                       </div>
                       {coupon.valid_until && (
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <span>⏰</span>
-                          <span>
-                            <span className="font-medium">Deri:</span> {new Date(coupon.valid_until).toLocaleDateString('sq-AL')}
-                          </span>
+                        <div className="flex items-center gap-2 text-xs text-forest-600 font-sans">
+                          <svg className="w-3.5 h-3.5 text-forest-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span><span className="font-medium">Deri:</span> {new Date(coupon.valid_until).toLocaleDateString('sq-AL')}</span>
                         </div>
                       )}
                     </div>
 
                     {/* Additional Info */}
-                    <div className="space-y-2 mb-4 text-sm">
+                    <div className="space-y-1.5 mb-4 text-xs font-sans">
                       {coupon.min_order_amount && (
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <span>💰</span>
-                          <span>Porosia minimale: <span className="font-semibold">{coupon.min_order_amount} L</span></span>
+                        <div className="flex items-center gap-2 text-forest-600">
+                          <span className="text-forest-400">Porosia min:</span>
+                          <span className="font-semibold text-forest-800">{coupon.min_order_amount} L</span>
                         </div>
                       )}
                       {coupon.max_discount && (
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <span>🎯</span>
-                          <span>Zbritje maksimale: <span className="font-semibold">{coupon.max_discount} L</span></span>
+                        <div className="flex items-center gap-2 text-forest-600">
+                          <span className="text-forest-400">Zbritje maks:</span>
+                          <span className="font-semibold text-forest-800">{coupon.max_discount} L</span>
                         </div>
                       )}
                     </div>
@@ -348,10 +313,9 @@ export default function CouponsManagement() {
                     {/* Actions */}
                     <button
                       onClick={() => handleEdit(coupon)}
-                      className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-all font-medium"
+                      className="w-full border-2 border-forest-600 text-forest-700 px-4 py-2.5 rounded-xl font-semibold hover:bg-forest-50 transition-all text-sm font-sans"
                     >
-                      <span>✏️</span>
-                      <span>Edito Kupon</span>
+                      Edito Kupon
                     </button>
                   </div>
                 </div>
@@ -362,44 +326,52 @@ export default function CouponsManagement() {
 
         {/* Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in">
-            <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-fade-in border-2 border-green-100">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">{editingCoupon ? '✏️' : '➕'}</span>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl shadow-[0_24px_64px_rgba(29,78,53,0.22)] p-6 md:p-8 w-full max-w-xl max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-display text-xl text-forest-900 font-bold">
                   {editingCoupon ? 'Edito Kupon' : 'Kupon i Ri'}
                 </h3>
+                <button
+                  onClick={() => {
+                    setShowModal(false);
+                    setEditingCoupon(null);
+                    resetForm();
+                  }}
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-forest-50 text-forest-600 hover:bg-forest-100 transition-colors text-lg font-bold"
+                >
+                  ×
+                </button>
               </div>
-              <form onSubmit={handleSubmit} className="space-y-6">
+
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">
                     Kodi i Kuponit <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.code}
                     onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-mono text-lg font-bold"
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-mono text-lg font-bold text-forest-900 transition-colors"
                     required
                     disabled={!!editingCoupon}
                     placeholder="P.sh. SUMMER2025"
                   />
                   {editingCoupon && (
-                    <p className="mt-1 text-xs text-gray-500">Kodi i kuponit nuk mund të ndryshohet</p>
+                    <p className="mt-1 text-xs text-forest-400 font-sans">Kodi i kuponit nuk mund të ndryshohet</p>
                   )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">
                       Tipi <span className="text-red-500">*</span>
                     </label>
                     <select
                       value={formData.type}
                       onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       required
                     >
                       <option value="percentage">Përqindje (%)</option>
@@ -407,7 +379,7 @@ export default function CouponsManagement() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">
                       Vlera <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -415,7 +387,7 @@ export default function CouponsManagement() {
                       step="0.01"
                       value={formData.value}
                       onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       required
                       placeholder={formData.type === 'percentage' ? '10' : '50'}
                     />
@@ -424,92 +396,80 @@ export default function CouponsManagement() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Porosia Minimale (L)
-                    </label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Porosia Minimale (L)</label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.min_order_amount}
                       onChange={(e) => setFormData({ ...formData, min_order_amount: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       placeholder="Opsionale"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Zbritje Maksimale (L)
-                    </label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Zbritje Maksimale (L)</label>
                     <input
                       type="number"
                       step="0.01"
                       value={formData.max_discount}
                       onChange={(e) => setFormData({ ...formData, max_discount: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                       placeholder="Opsionale"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Kufiri i Përdorimit
-                  </label>
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Kufiri i Përdorimit</label>
                   <input
                     type="number"
                     value={formData.usage_limit}
                     onChange={(e) => setFormData({ ...formData, usage_limit: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                     placeholder="Lëreni bosh për pa kufi"
                   />
-                  <p className="mt-1 text-xs text-gray-500">Numri maksimal i përdorimeve (lëreni bosh për pa kufi)</p>
+                  <p className="mt-1 text-xs text-forest-400 font-sans">Numri maksimal i përdorimeve (lëreni bosh për pa kufi)</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Valid nga
-                    </label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Valid nga</label>
                     <input
                       type="date"
                       value={formData.valid_from}
                       onChange={(e) => setFormData({ ...formData, valid_from: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Valid deri
-                    </label>
+                    <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Valid deri</label>
                     <input
                       type="date"
                       value={formData.valid_until}
                       onChange={(e) => setFormData({ ...formData, valid_until: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={formData.is_active}
-                      onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                      className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                    />
-                    <span className="ml-3 text-gray-700 font-medium">
-                      Kupon aktiv (do të jetë i disponueshëm për përdorim)
-                    </span>
-                  </label>
-                </div>
+                <label className="flex items-center p-4 bg-forest-50 rounded-xl cursor-pointer hover:bg-forest-100 transition-colors border border-forest-100">
+                  <input
+                    type="checkbox"
+                    checked={formData.is_active}
+                    onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                    className="accent-forest-700 w-4 h-4 rounded"
+                  />
+                  <span className="ml-3 text-forest-700 font-medium font-sans text-sm">
+                    Kupon aktiv (do të jetë i disponueshëm për përdorim)
+                  </span>
+                </label>
 
-                <div className="flex gap-4 pt-4 border-t border-gray-200">
+                <div className="flex gap-3 pt-4 border-t border-forest-100">
                   <button
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold"
+                    className="flex-1 bg-forest-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all font-sans"
                   >
-                    {editingCoupon ? '💾 Përditëso' : '✨ Krijo Kupon'}
+                    {editingCoupon ? 'Përditëso' : 'Krijo Kupon'}
                   </button>
                   <button
                     type="button"
@@ -518,7 +478,7 @@ export default function CouponsManagement() {
                       setEditingCoupon(null);
                       resetForm();
                     }}
-                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all font-semibold"
+                    className="flex-1 border-2 border-forest-600 text-forest-700 px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-50 transition-all font-sans"
                   >
                     Anulo
                   </button>
@@ -531,4 +491,3 @@ export default function CouponsManagement() {
     </AdminLayout>
   );
 }
-

@@ -132,8 +132,8 @@ export default function CategoriesManagement() {
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Duke ngarkuar kategoritë...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-forest-100 border-t-forest-600 mx-auto mb-4"></div>
+            <p className="text-forest-600 font-sans">Duke ngarkuar kategoritë...</p>
           </div>
         </div>
       </AdminLayout>
@@ -145,16 +145,13 @@ export default function CategoriesManagement() {
       <Head>
         <title>Menaxho Kategoritë - Admin</title>
       </Head>
-      
+
       <div>
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-              <span className="text-4xl">📁</span>
-              <span>Menaxho Kategoritë</span>
-            </h1>
-            <p className="text-gray-600">Krijo dhe menaxho kategoritë e produkteve</p>
+            <h1 className="font-display text-2xl text-forest-900 font-bold mb-1">Menaxho Kategoritë</h1>
+            <p className="text-forest-600 font-sans text-sm">Krijo dhe menaxho kategoritë e produkteve</p>
           </div>
           <button
             onClick={() => {
@@ -164,9 +161,9 @@ export default function CategoriesManagement() {
                 setShowForm(true);
               }
             }}
-            className="flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold"
+            className="bg-forest-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all flex items-center gap-2 font-sans"
           >
-            <span className="text-xl">{showForm ? '✕' : '+'}</span>
+            <span className="text-lg font-bold">{showForm ? '×' : '+'}</span>
             <span>{showForm ? 'Anulo' : 'Shto Kategori të Re'}</span>
           </button>
         </div>
@@ -174,76 +171,39 @@ export default function CategoriesManagement() {
         {/* Stats Cards */}
         {categories.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium mb-1">Total Kategoritë</p>
-                  <p className="text-3xl font-bold text-gray-900">{categories.length}</p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">📁</span>
-                </div>
-              </div>
+            <div className="bg-gradient-to-br from-forest-800 to-forest-600 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Total Kategoritë</p>
+              <p className="font-display text-3xl font-bold mt-1">{categories.length}</p>
             </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium mb-1">Kategoritë Aktive</p>
-                  <p className="text-3xl font-bold text-green-600">
-                    {categories.filter(c => c.is_active).length}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">✅</span>
-                </div>
-              </div>
+            <div className="bg-gradient-to-br from-forest-700 to-forest-500 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Kategoritë Aktive</p>
+              <p className="font-display text-3xl font-bold mt-1">{categories.filter(c => c.is_active).length}</p>
             </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-600 text-sm font-medium mb-1">Kategoritë Jo Aktive</p>
-                  <p className="text-3xl font-bold text-red-600">
-                    {categories.filter(c => !c.is_active).length}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">❌</span>
-                </div>
-              </div>
+            <div className="bg-gradient-to-br from-red-600 to-red-400 text-white rounded-2xl p-6">
+              <p className="text-white/80 text-sm font-medium font-sans">Kategoritë Jo Aktive</p>
+              <p className="font-display text-3xl font-bold mt-1">{categories.filter(c => !c.is_active).length}</p>
             </div>
           </div>
         )}
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6 animate-fade-in">
-            <div className="flex items-center">
-              <svg className="w-5 h-5 text-red-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <p className="text-red-700 font-medium">{error}</p>
-            </div>
+          <div className="bg-red-50 border border-red-200 p-4 rounded-2xl mb-6">
+            <p className="text-red-700 font-medium font-sans text-sm">{error}</p>
           </div>
         )}
 
         {/* Form */}
         {showForm && (
-          <div className="bg-white rounded-xl shadow-xl p-6 md:p-8 mb-8 border-2 border-green-100 animate-fade-in">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">{editingId ? '✏️' : '➕'}</span>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-6 md:p-8 mb-8">
+            <h2 className="font-display text-xl text-forest-900 font-bold mb-6">
               {editingId ? 'Ndrysho Kategori' : 'Kategori e Re'}
             </h2>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">
                     Emri <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -251,13 +211,13 @@ export default function CategoriesManagement() {
                     value={formData.name}
                     onChange={handleNameChange}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                     placeholder="P.sh. Qumësht"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">
                     Slug <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -265,98 +225,89 @@ export default function CategoriesManagement() {
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all font-mono text-sm"
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-mono text-sm text-forest-900 transition-colors"
                     placeholder="qumesht"
                   />
-                  <p className="mt-1 text-xs text-gray-500">URL-friendly version (auto-generohet nga emri)</p>
+                  <p className="mt-1 text-xs text-forest-400 font-sans">URL-friendly version (auto-generohet nga emri)</p>
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Përshkrimi
-                  </label>
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Përshkrimi</label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all resize-none"
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors resize-none"
                     rows="3"
                     placeholder="Përshkrim i shkurtër për kategorinë..."
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    URL e Fotografisë
-                  </label>
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">URL e Fotografisë</label>
                   <input
                     type="url"
                     value={formData.image_url}
                     onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                     placeholder="https://example.com/image.jpg"
                   />
                   {formData.image_url && (
-                    <div className="mt-4 rounded-xl overflow-hidden border-2 border-gray-200 shadow-lg">
+                    <div className="mt-3 rounded-xl overflow-hidden border border-forest-100">
                       <img
                         src={formData.image_url}
                         alt="Preview"
-                        className="w-full h-48 object-cover"
+                        className="w-full h-32 object-cover rounded-xl border border-forest-100"
                         onError={(e) => {
                           e.target.style.display = 'none';
                           e.target.nextSibling.style.display = 'flex';
                         }}
                       />
-                      <div className="hidden w-full h-48 bg-gray-100 items-center justify-center">
-                        <div className="text-center">
-                          <span className="text-4xl mb-2 block">🖼️</span>
-                          <p className="text-gray-500">Imazhi nuk u ngarkua</p>
-                        </div>
+                      <div className="hidden w-full h-32 bg-forest-50 items-center justify-center rounded-xl">
+                        <p className="text-forest-400 font-sans text-sm">Imazhi nuk u ngarkua</p>
                       </div>
                     </div>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Renditja
-                  </label>
+                  <label className="block text-sm font-semibold text-forest-700 mb-1.5 font-sans">Renditja</label>
                   <input
                     type="number"
                     value={formData.display_order}
                     onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
                     min="0"
                     placeholder="0"
                   />
-                  <p className="mt-1 text-xs text-gray-500">Numri më i ulët shfaqet i pari</p>
+                  <p className="mt-1 text-xs text-forest-400 font-sans">Numri më i ulët shfaqet i pari</p>
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+                  <label className="flex items-center p-4 bg-forest-50 rounded-xl cursor-pointer hover:bg-forest-100 transition-colors border border-forest-100">
                     <input
                       type="checkbox"
                       checked={formData.is_active}
                       onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                      className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      className="accent-forest-700 w-4 h-4 rounded"
                     />
-                    <span className="ml-3 text-gray-700 font-medium">
+                    <span className="ml-3 text-forest-700 font-medium font-sans text-sm">
                       Kategori aktive (do të shfaqet në faqen kryesore)
                     </span>
                   </label>
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-4 border-t border-gray-200">
+              <div className="flex gap-3 pt-4 border-t border-forest-100">
                 <button
                   type="submit"
-                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold"
+                  className="flex-1 bg-forest-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all font-sans"
                 >
-                  {editingId ? '💾 Ruaj Ndryshimet' : '✨ Krijo Kategori'}
+                  {editingId ? 'Ruaj Ndryshimet' : 'Krijo Kategori'}
                 </button>
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all font-semibold"
+                  className="flex-1 border-2 border-forest-600 text-forest-700 px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-50 transition-all font-sans"
                 >
                   Anulo
                 </button>
@@ -366,30 +317,31 @@ export default function CategoriesManagement() {
         )}
 
         {/* Categories Grid */}
-              {categories.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <div className="text-6xl mb-4">📁</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Nuk ka kategori</h2>
-            <p className="text-gray-600 mb-6">Krijo kategorinë tënde të parë për të filluar</p>
+        {categories.length === 0 ? (
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-12 text-center">
+            <svg className="w-16 h-16 text-forest-200 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <h2 className="font-display text-xl text-forest-900 font-bold mb-2">Nuk ka kategori</h2>
+            <p className="text-forest-600 font-sans mb-6">Krijo kategorinë tënde të parë për të filluar</p>
             <button
               onClick={() => setShowForm(true)}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold"
+              className="bg-forest-700 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-forest-800 transition-all font-sans"
             >
               + Shto Kategori të Re
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {categories
               .sort((a, b) => a.display_order - b.display_order)
               .map((category, index) => (
                 <div
                   key={category.id}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-gray-100 overflow-hidden animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 hover:shadow-[0_4px_24px_rgba(29,78,53,0.13)] transition-all duration-300 overflow-hidden"
                 >
                   {/* Category Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-green-100 to-emerald-200 overflow-hidden">
+                  <div className="relative h-44 bg-forest-50 overflow-hidden">
                     {category.image_url ? (
                       <img
                         src={category.image_url}
@@ -401,63 +353,63 @@ export default function CategoriesManagement() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-6xl">📁</span>
+                        <svg className="w-16 h-16 text-forest-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
                       </div>
                     )}
                     <div className="absolute top-3 right-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          category.is_active
-                          ? 'bg-green-500 text-white shadow-lg'
-                          : 'bg-red-500 text-white shadow-lg'
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                        category.is_active
+                          ? 'bg-forest-100 text-forest-800 border border-forest-200'
+                          : 'bg-red-100 text-red-800 border border-red-200'
                       }`}>
-                        {category.is_active ? '✓ Aktive' : '✕ Jo Aktive'}
+                        {category.is_active ? 'Aktive' : 'Jo Aktive'}
                       </span>
                     </div>
                     <div className="absolute top-3 left-3">
-                      <span className="px-3 py-1 bg-black/50 text-white rounded-full text-xs font-bold backdrop-blur-sm">
+                      <span className="px-2.5 py-0.5 bg-black/40 text-white rounded-full text-xs font-bold backdrop-blur-sm">
                         #{category.display_order}
                       </span>
                     </div>
                   </div>
 
                   {/* Category Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <div className="p-5">
+                    <h3 className="font-display text-lg font-bold text-forest-900 mb-1">
                       {category.name}
                     </h3>
-                    
+
                     {category.description && (
-                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                      <p className="text-sm text-forest-600 mb-3 line-clamp-2 font-sans">
                         {category.description}
                       </p>
                     )}
 
-                    <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                      <p className="text-xs text-gray-500 mb-1">Slug:</p>
-                      <p className="text-sm font-mono text-gray-700 break-all">
+                    <div className="mb-4 p-3 bg-forest-50 rounded-xl border border-forest-100">
+                      <p className="text-xs text-forest-500 mb-0.5 font-sans">Slug:</p>
+                      <p className="text-sm font-mono text-forest-700 break-all">
                         /{category.slug}
                       </p>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-2 mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex gap-2 pt-3 border-t border-forest-100">
                       <button
                         onClick={() => handleEdit(category)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-all font-medium"
+                        className="flex-1 border-2 border-forest-600 text-forest-700 px-4 py-2 rounded-xl font-semibold hover:bg-forest-50 transition-all text-sm font-sans"
                       >
-                        <span>✏️</span>
-                        <span>Ndrysho</span>
+                        Ndrysho
                       </button>
                       <button
                         onClick={() => handleDelete(category.id)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-2.5 rounded-lg hover:bg-red-700 transition-all font-medium"
+                        className="flex-1 bg-red-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-red-700 transition-all text-sm font-sans"
                       >
-                        <span>🗑️</span>
-                        <span>Fshi</span>
+                        Fshi
                       </button>
-        </div>
-      </div>
-    </div>
+                    </div>
+                  </div>
+                </div>
               ))}
           </div>
         )}
@@ -465,4 +417,3 @@ export default function CategoriesManagement() {
     </AdminLayout>
   );
 }
-

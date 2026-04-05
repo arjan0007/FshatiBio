@@ -71,7 +71,7 @@ export default function Notifications() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      setNotifications(notifications.map(n => 
+      setNotifications(notifications.map(n =>
         n.id === notificationId ? { ...n, is_read: true } : n
       ));
       setUnreadCount(Math.max(0, unreadCount - 1));
@@ -102,7 +102,7 @@ export default function Notifications() {
       case 'order':
         return '📦';
       case 'promotion':
-        return '🎉';
+        return '🎁';
       case 'system':
         return '🔔';
       default:
@@ -125,32 +125,39 @@ export default function Notifications() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Duke ngarkuar...</div>
+      <div className="min-h-screen bg-cream-100 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4 animate-fade-in">
+          <div className="w-12 h-12 rounded-full border-4 border-forest-200 border-t-forest-700 animate-spin"></div>
+          <p className="text-forest-700 font-medium">Duke ngarkuar njoftimet...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream-100">
       <Head>
         <title>Njoftimet - FshatiBio</title>
       </Head>
 
-      <header className="bg-white shadow-sm">
+      {/* Header */}
+      <header className="bg-white shadow-card border-b border-earth-100">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-green-700">
-              🥛 FshatiBio
+            <Link href="/" className="flex items-center gap-2">
+              <svg className="w-6 h-6 text-forest-700" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17 8C8 10 5.9 16.17 3.82 19.1L5.71 21l1-1.3A4.49 4.49 0 008 20c4 0 8-3 11-12l-2 0z"/>
+              </svg>
+              <span className="font-display text-xl font-bold text-forest-800">FshatiBio</span>
             </Link>
-            <nav className="flex gap-4">
-              <Link href="/products" className="text-gray-700 hover:text-green-700">
+            <nav className="flex gap-6">
+              <Link href="/products" className="text-earth-600 hover:text-forest-700 transition-colors text-sm font-medium">
                 Produktet
               </Link>
-              <Link href="/cart" className="text-gray-700 hover:text-green-700">
+              <Link href="/cart" className="text-earth-600 hover:text-forest-700 transition-colors text-sm font-medium">
                 Shporta
               </Link>
-              <Link href="/profile" className="text-gray-700 hover:text-green-700">
+              <Link href="/profile" className="text-earth-600 hover:text-forest-700 transition-colors text-sm font-medium">
                 Profili
               </Link>
             </nav>
@@ -158,49 +165,80 @@ export default function Notifications() {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-4 sm:py-6 md:py-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 md:mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold">Njoftimet</h1>
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
-            <div className="flex gap-2">
+      <main className="container mx-auto px-4 py-6 md:py-10 max-w-3xl">
+
+        {/* Page title card */}
+        <div className="bg-white rounded-3xl shadow-card px-6 py-5 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 animate-fade-in">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-forest-100 rounded-2xl flex items-center justify-center">
+              <span className="text-xl">🔔</span>
+            </div>
+            <div>
+              <h1 className="font-display text-2xl sm:text-3xl font-bold text-forest-900">Njoftimet</h1>
+              {unreadCount > 0 && (
+                <p className="text-earth-500 text-xs mt-0.5">{unreadCount} të palexuara</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            {/* Filter pill tabs */}
+            <div className="flex gap-2 bg-cream-100 rounded-full p-1">
               <button
                 onClick={() => setFilter('all')}
-                className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-base ${
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
                   filter === 'all'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                    ? 'bg-forest-700 text-white shadow-warm'
+                    : 'text-earth-600 hover:text-forest-700'
                 }`}
               >
                 Të gjitha
               </button>
               <button
                 onClick={() => setFilter('unread')}
-                className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg relative text-sm sm:text-base ${
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all relative ${
                   filter === 'unread'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                    ? 'bg-forest-700 text-white shadow-warm'
+                    : 'text-earth-600 hover:text-forest-700'
                 }`}
               >
                 Të palexuara
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-xs">
+                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
                     {unreadCount}
                   </span>
                 )}
               </button>
             </div>
+
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
                 disabled={markingAll}
-                className="px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 text-sm sm:text-base whitespace-nowrap"
+                className="bg-forest-700 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-forest-800 transition-all shadow-warm disabled:opacity-50 whitespace-nowrap flex items-center gap-1.5"
               >
-                {markingAll ? 'Duke përditësuar...' : 'Shëno të gjitha si të lexuara'}
+                {markingAll ? (
+                  <>
+                    <svg className="animate-spin w-3.5 h-3.5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                    <span>Duke përditësuar...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                    </svg>
+                    <span>Shëno të gjitha si të lexuara</span>
+                  </>
+                )}
               </button>
             )}
           </div>
         </div>
 
+        {/* Notifications list */}
         {notifications.length === 0 ? (
           <EmptyState
             icon="🔔"
@@ -212,58 +250,82 @@ export default function Notifications() {
             onAction={() => router.push('/products')}
           />
         ) : (
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-3 animate-slide-up">
             {notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 ${
-                  notification.is_read
-                    ? getNotificationColor(notification.type)
-                    : `${getNotificationColor(notification.type)} border-l-green-500`
-                } ${!notification.is_read ? 'font-semibold' : ''}`}
+                className={`rounded-2xl shadow-card border-l-4 overflow-hidden transition-all hover:shadow-warm ${
+                  !notification.is_read
+                    ? 'bg-forest-50 border-l-forest-500'
+                    : `bg-white ${
+                        notification.type === 'order' ? 'border-l-blue-400' :
+                        notification.type === 'promotion' ? 'border-l-purple-400' :
+                        notification.type === 'system' ? 'border-l-amber-400' :
+                        'border-l-earth-300'
+                      }`
+                }`}
               >
-                <div className="flex items-start gap-3 sm:gap-4">
-                  <div className="text-2xl sm:text-3xl flex-shrink-0">{getNotificationIcon(notification.type)}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-base sm:text-lg font-semibold mb-1 break-words">{notification.title}</h3>
-                        <p className="text-gray-700 mb-2 text-sm sm:text-base break-words">{notification.message}</p>
-                        <p className="text-xs sm:text-sm text-gray-500">
-                          {new Date(notification.created_at).toLocaleString('sq-AL', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </p>
-                      </div>
-                      {!notification.is_read && (
-                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full flex-shrink-0">
-                          E re
-                        </span>
-                      )}
+                <div className="p-4 sm:p-5">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    {/* Icon bubble */}
+                    <div className={`flex-shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center text-xl ${
+                      !notification.is_read ? 'bg-forest-100' :
+                      notification.type === 'order' ? 'bg-blue-100' :
+                      notification.type === 'promotion' ? 'bg-purple-100' :
+                      notification.type === 'system' ? 'bg-amber-100' :
+                      'bg-earth-100'
+                    }`}>
+                      {getNotificationIcon(notification.type)}
                     </div>
-                    {notification.link_url && (
-                      <div className="mt-3 sm:mt-4">
-                        <Link
-                          href={notification.link_url}
-                          className="text-green-600 hover:text-green-700 underline text-sm sm:text-base"
-                          onClick={() => !notification.is_read && markAsRead(notification.id)}
-                        >
-                          Shiko më shumë →
-                        </Link>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h3 className={`text-base font-bold break-words text-forest-900 ${!notification.is_read ? 'text-forest-900' : 'text-earth-800'}`}>
+                          {notification.title}
+                        </h3>
+                        {!notification.is_read && (
+                          <span className="bg-forest-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0">
+                            E re
+                          </span>
+                        )}
                       </div>
-                    )}
-                    {!notification.is_read && (
-                      <button
-                        onClick={() => markAsRead(notification.id)}
-                        className="mt-2 text-xs sm:text-sm text-blue-600 hover:text-blue-700"
-                      >
-                        Shëno si të lexuar
-                      </button>
-                    )}
+
+                      <p className="text-earth-600 mb-2 text-sm break-words leading-relaxed">{notification.message}</p>
+
+                      <p className="text-xs text-earth-400">
+                        {new Date(notification.created_at).toLocaleString('sq-AL', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-3 mt-3">
+                        {notification.link_url && (
+                          <Link
+                            href={notification.link_url}
+                            className="inline-flex items-center gap-1 text-forest-700 hover:text-forest-900 text-sm font-semibold transition-colors"
+                            onClick={() => !notification.is_read && markAsRead(notification.id)}
+                          >
+                            <span>Shiko më shumë</span>
+                            <span>→</span>
+                          </Link>
+                        )}
+                        {!notification.is_read && (
+                          <button
+                            onClick={() => markAsRead(notification.id)}
+                            className="text-xs text-earth-400 hover:text-forest-700 transition-colors font-medium flex items-center gap-1"
+                          >
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                            </svg>
+                            Shëno si të lexuar
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -274,4 +336,3 @@ export default function Notifications() {
     </div>
   );
 }
-

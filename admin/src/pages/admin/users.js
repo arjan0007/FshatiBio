@@ -75,8 +75,8 @@ export default function UsersManagement() {
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Duke ngarkuar përdoruesit...</p>
+            <div className="animate-spin rounded-full h-10 w-10 border-4 border-forest-100 border-t-forest-600 mx-auto mb-4"></div>
+            <p className="text-forest-600 font-sans">Duke ngarkuar përdoruesit...</p>
           </div>
         </div>
       </AdminLayout>
@@ -98,194 +98,139 @@ export default function UsersManagement() {
       <div>
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-            <span className="text-4xl">👥</span>
-            <span>Menaxho Përdoruesit</span>
-          </h1>
-          <p className="text-gray-600">Shiko dhe menaxho të gjithë përdoruesit e platformës</p>
+          <h1 className="font-display text-2xl text-forest-900 font-bold mb-1">Menaxho Përdoruesit</h1>
+          <p className="text-forest-600 font-sans text-sm">Shiko dhe menaxho të gjithë përdoruesit e platformës</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Total Përdoruesit</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">👥</span>
-              </div>
-            </div>
+          <div className="bg-gradient-to-br from-forest-800 to-forest-600 text-white rounded-2xl p-6">
+            <p className="text-white/80 text-sm font-medium font-sans">Total Përdoruesit</p>
+            <p className="font-display text-3xl font-bold mt-1">{stats.total}</p>
           </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Përdoruesit Aktivë</p>
-                <p className="text-3xl font-bold text-green-600">{stats.active}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">✅</span>
-              </div>
-            </div>
+          <div className="bg-gradient-to-br from-forest-700 to-forest-500 text-white rounded-2xl p-6">
+            <p className="text-white/80 text-sm font-medium font-sans">Përdoruesit Aktivë</p>
+            <p className="font-display text-3xl font-bold mt-1">{stats.active}</p>
           </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Përdoruesit Jo Aktivë</p>
-                <p className="text-3xl font-bold text-red-600">{stats.inactive}</p>
-              </div>
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">❌</span>
-              </div>
-            </div>
+          <div className="bg-gradient-to-br from-red-600 to-red-400 text-white rounded-2xl p-6">
+            <p className="text-white/80 text-sm font-medium font-sans">Jo Aktivë</p>
+            <p className="font-display text-3xl font-bold mt-1">{stats.inactive}</p>
           </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">Total Porositë</p>
-                <p className="text-3xl font-bold text-purple-600">{stats.totalOrders}</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <span className="text-2xl">📦</span>
-              </div>
-            </div>
+          <div className="bg-gradient-to-br from-purple-700 to-purple-500 text-white rounded-2xl p-6">
+            <p className="text-white/80 text-sm font-medium font-sans">Total Porositë</p>
+            <p className="font-display text-3xl font-bold mt-1">{stats.totalOrders}</p>
           </div>
         </div>
 
         {/* Search Bar */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-6 border-2 border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <span className="text-xl">🔍</span>
-            </div>
-            <input
-              type="text"
-              placeholder="Kërko përdorues (email, emër)..."
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setPagination(prev => ({ ...prev, page: 1 }));
-              }}
-              className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
-            />
-          </div>
+        <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-4 mb-6">
+          <input
+            type="text"
+            placeholder="Kërko përdorues (email, emër)..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPagination(prev => ({ ...prev, page: 1 }));
+            }}
+            className="w-full px-4 py-2.5 rounded-xl border-2 border-forest-100 bg-white focus:outline-none focus:border-forest-400 font-sans text-forest-900 transition-colors"
+          />
         </div>
 
         {/* Users Table */}
         {users.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <div className="text-6xl mb-4">👥</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Nuk u gjetën përdorues</h2>
-            <p className="text-gray-600">Provoni me terma të ndryshëm kërkimi</p>
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-12 text-center">
+            <svg className="w-16 h-16 text-forest-200 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <h2 className="font-display text-xl text-forest-900 font-bold mb-2">Nuk u gjetën përdorues</h2>
+            <p className="text-forest-600 font-sans">Provoni me terma të ndryshëm kërkimi</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+              <table className="w-full text-sm">
+                <thead className="bg-forest-50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Përdoruesi</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Email</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Telefon</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Porositë</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Statusi</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Veprime</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wider font-sans">Përdoruesi</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wider font-sans">Email</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wider font-sans">Telefon</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wider font-sans">Porositë</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wider font-sans">Statusi</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wider font-sans">Veprime</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody>
                   {users.map((user, index) => (
-                    <tr 
+                    <tr
                       key={user.id}
-                      className="hover:bg-gray-50 transition-colors animate-fade-in"
-                      style={{ animationDelay: `${index * 0.05}s` }}
+                      className="hover:bg-forest-50 transition-colors"
                     >
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3 text-forest-800 border-b border-forest-50">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span className="text-white font-bold text-lg">
-                              {user.first_name.charAt(0)}{user.last_name.charAt(0)}
-                            </span>
+                          <div className="w-8 h-8 bg-gradient-to-br from-forest-400 to-forest-700 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                            {user.first_name.charAt(0)}{user.last_name.charAt(0)}
                           </div>
                           <div>
-                            <div className="font-bold text-gray-900">
+                            <div className="font-semibold text-forest-900 font-sans">
                               {user.first_name} {user.last_name}
                             </div>
-                            <div className="text-sm text-gray-500 flex items-center gap-1">
-                              <span>📅</span>
-                              <span>Regjistruar: {new Date(user.created_at).toLocaleDateString('sq-AL')}</span>
+                            <div className="text-xs text-forest-500 font-sans">
+                              Regjistruar: {new Date(user.created_at).toLocaleDateString('sq-AL')}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-400">✉️</span>
-                          <a 
-                            href={`mailto:${user.email}`}
-                            className="text-sm text-gray-700 hover:text-blue-600 font-medium"
-                          >
-                            {user.email}
-                          </a>
-                        </div>
+                      <td className="px-4 py-3 text-forest-800 border-b border-forest-50">
+                        <a
+                          href={`mailto:${user.email}`}
+                          className="text-sm text-forest-700 hover:text-forest-900 font-sans"
+                        >
+                          {user.email}
+                        </a>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3 text-forest-800 border-b border-forest-50">
                         {user.phone ? (
-                          <div className="flex items-center gap-2">
-                            <span className="text-gray-400">📞</span>
-                            <a 
-                              href={`tel:${user.phone}`}
-                              className="text-sm text-gray-700 hover:text-green-600 font-medium"
-                            >
-                              {user.phone}
-                            </a>
-                          </div>
+                          <a
+                            href={`tel:${user.phone}`}
+                            className="text-sm text-forest-700 hover:text-forest-900 font-sans"
+                          >
+                            {user.phone}
+                          </a>
                         ) : (
-                          <span className="text-sm text-gray-400">-</span>
+                          <span className="text-sm text-forest-400 font-sans">-</span>
                         )}
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-400">📦</span>
-                          <span className="text-sm font-semibold text-gray-900">
-                            {user.order_count || 0} porosi
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`px-3 py-1.5 rounded-lg text-xs font-bold border-2 flex items-center gap-1.5 w-fit ${
-                            user.is_active
-                              ? 'bg-green-100 text-green-800 border-green-300'
-                              : 'bg-red-100 text-red-800 border-red-300'
-                          }`}
-                        >
-                          <span>{user.is_active ? '✓' : '✕'}</span>
-                          <span>{user.is_active ? 'Aktive' : 'Jo Aktive'}</span>
+                      <td className="px-4 py-3 text-forest-800 border-b border-forest-50">
+                        <span className="text-sm font-semibold text-forest-900 font-sans">
+                          {user.order_count || 0} porosi
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-3 text-forest-800 border-b border-forest-50 whitespace-nowrap">
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                          user.is_active
+                            ? 'bg-forest-100 text-forest-700 border border-forest-200'
+                            : 'bg-red-100 text-red-700 border border-red-200'
+                        }`}>
+                          {user.is_active ? 'Aktive' : 'Jo Aktive'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-forest-800 border-b border-forest-50 whitespace-nowrap">
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleViewDetails(user.id)}
-                            className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-medium text-sm"
+                            className="border-2 border-forest-600 text-forest-700 px-3 py-1.5 rounded-xl font-semibold hover:bg-forest-50 transition-all text-xs font-sans"
                           >
-                            <span>👁️</span>
-                            <span>Detaje</span>
+                            Detaje
                           </button>
                           <button
                             onClick={() => handleToggleActive(user)}
-                            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg transition-all font-medium text-sm ${
+                            className={`px-3 py-1.5 rounded-xl font-semibold transition-all text-xs font-sans ${
                               user.is_active
                                 ? 'bg-red-600 text-white hover:bg-red-700'
-                                : 'bg-green-600 text-white hover:bg-green-700'
+                                : 'bg-forest-700 text-white hover:bg-forest-800'
                             }`}
                           >
-                            <span>{user.is_active ? '🚫' : '✓'}</span>
-                            <span>{user.is_active ? 'Deaktivizo' : 'Aktivizo'}</span>
+                            {user.is_active ? 'Deaktivizo' : 'Aktivizo'}
                           </button>
                         </div>
                       </td>
@@ -299,23 +244,23 @@ export default function UsersManagement() {
 
         {/* Pagination */}
         {pagination.total > pagination.limit && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mt-6 flex items-center justify-between">
-            <div className="text-sm text-gray-700 font-medium">
-              Faqja <span className="font-bold text-gray-900">{pagination.page}</span> nga{' '}
-              <span className="font-bold text-gray-900">{Math.ceil(pagination.total / pagination.limit)}</span>
+          <div className="bg-white rounded-2xl shadow-[0_2px_16px_rgba(29,78,53,0.07)] border border-forest-100 p-4 mt-6 flex items-center justify-between">
+            <div className="text-sm text-forest-700 font-sans">
+              Faqja <span className="font-bold text-forest-900">{pagination.page}</span> nga{' '}
+              <span className="font-bold text-forest-900">{Math.ceil(pagination.total / pagination.limit)}</span>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
                 disabled={pagination.page === 1}
-                className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 rounded-xl border border-forest-200 text-forest-700 hover:bg-forest-50 transition-all text-sm font-sans disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 ← Paraardhës
               </button>
               <button
                 onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                 disabled={pagination.page >= Math.ceil(pagination.total / pagination.limit)}
-                className="px-6 py-2.5 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 rounded-xl border border-forest-200 text-forest-700 hover:bg-forest-50 transition-all text-sm font-sans disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Tjetër →
               </button>
@@ -325,72 +270,67 @@ export default function UsersManagement() {
 
         {/* User Details Modal */}
         {selectedUser && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fade-in">
-            <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-fade-in border-2 border-green-100">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl shadow-[0_24px_64px_rgba(29,78,53,0.22)] p-6 md:p-8 w-full max-w-xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">
-                      {selectedUser.user.first_name.charAt(0)}{selectedUser.user.last_name.charAt(0)}
-                    </span>
+                  <div className="w-10 h-10 bg-gradient-to-br from-forest-400 to-forest-700 rounded-full flex items-center justify-center text-white font-bold">
+                    {selectedUser.user.first_name.charAt(0)}{selectedUser.user.last_name.charAt(0)}
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Detaje Përdoruesi</h2>
+                  <h2 className="font-display text-xl text-forest-900 font-bold">Detaje Përdoruesi</h2>
                 </div>
                 <button
                   onClick={() => setSelectedUser(null)}
-                  className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-center transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-forest-50 text-forest-600 hover:bg-forest-100 transition-colors text-lg font-bold"
                 >
-                  <span className="text-xl">✕</span>
+                  ×
                 </button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-5">
                 {/* User Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-4 bg-gray-50 rounded-xl">
-                    <p className="text-sm text-gray-500 mb-1">Emri i Plotë</p>
-                    <p className="font-bold text-gray-900 text-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-forest-50 rounded-2xl border border-forest-100">
+                    <p className="text-xs text-forest-500 mb-1 font-sans font-medium">Emri i Plotë</p>
+                    <p className="font-bold text-forest-900 font-sans">
                       {selectedUser.user.first_name} {selectedUser.user.last_name}
                     </p>
                   </div>
-                  <div className="p-4 bg-gray-50 rounded-xl">
-                    <p className="text-sm text-gray-500 mb-1">Email</p>
-                    <a 
+                  <div className="p-4 bg-forest-50 rounded-2xl border border-forest-100">
+                    <p className="text-xs text-forest-500 mb-1 font-sans font-medium">Email</p>
+                    <a
                       href={`mailto:${selectedUser.user.email}`}
-                      className="font-bold text-blue-600 hover:text-blue-800 text-lg"
+                      className="font-bold text-forest-700 hover:text-forest-900 font-sans text-sm break-all"
                     >
                       {selectedUser.user.email}
                     </a>
                   </div>
-                  <div className="p-4 bg-gray-50 rounded-xl">
-                    <p className="text-sm text-gray-500 mb-1">Telefon</p>
+                  <div className="p-4 bg-forest-50 rounded-2xl border border-forest-100">
+                    <p className="text-xs text-forest-500 mb-1 font-sans font-medium">Telefon</p>
                     {selectedUser.user.phone ? (
-                      <a 
+                      <a
                         href={`tel:${selectedUser.user.phone}`}
-                        className="font-bold text-green-600 hover:text-green-800 text-lg"
+                        className="font-bold text-forest-700 hover:text-forest-900 font-sans"
                       >
                         {selectedUser.user.phone}
                       </a>
                     ) : (
-                      <p className="text-gray-400">-</p>
+                      <p className="text-forest-400 font-sans">-</p>
                     )}
                   </div>
-                  <div className="p-4 bg-gray-50 rounded-xl">
-                    <p className="text-sm text-gray-500 mb-1">Statusi</p>
-                    <span
-                      className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold border-2 ${
-                        selectedUser.user.is_active
-                          ? 'bg-green-100 text-green-800 border-green-300'
-                          : 'bg-red-100 text-red-800 border-red-300'
-                      }`}
-                    >
-                      <span className="mr-1.5">{selectedUser.user.is_active ? '✓' : '✕'}</span>
+                  <div className="p-4 bg-forest-50 rounded-2xl border border-forest-100">
+                    <p className="text-xs text-forest-500 mb-1 font-sans font-medium">Statusi</p>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                      selectedUser.user.is_active
+                        ? 'bg-forest-100 text-forest-700 border border-forest-200'
+                        : 'bg-red-100 text-red-700 border border-red-200'
+                    }`}>
                       {selectedUser.user.is_active ? 'Aktive' : 'Jo Aktive'}
                     </span>
                   </div>
-                  <div className="p-4 bg-gray-50 rounded-xl">
-                    <p className="text-sm text-gray-500 mb-1">Data e Regjistrimit</p>
-                    <p className="font-bold text-gray-900">
+                  <div className="p-4 bg-forest-50 rounded-2xl border border-forest-100 md:col-span-2">
+                    <p className="text-xs text-forest-500 mb-1 font-sans font-medium">Data e Regjistrimit</p>
+                    <p className="font-bold text-forest-900 font-sans">
                       {new Date(selectedUser.user.created_at).toLocaleDateString('sq-AL', {
                         day: 'numeric',
                         month: 'long',
@@ -402,32 +342,28 @@ export default function UsersManagement() {
 
                 {/* Recent Orders */}
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <span>📦</span>
-                    <span>Porositë e Fundit</span>
-                  </h3>
+                  <h3 className="font-display text-base text-forest-900 font-semibold mb-3">Porositë e Fundit</h3>
                   {selectedUser.recent_orders.length === 0 ? (
-                    <div className="bg-gray-50 rounded-xl p-8 text-center">
-                      <span className="text-4xl mb-2 block">📦</span>
-                      <p className="text-gray-500">Nuk ka porosi</p>
+                    <div className="bg-forest-50 rounded-2xl p-6 text-center border border-forest-100">
+                      <p className="text-forest-500 font-sans">Nuk ka porosi</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
                       {selectedUser.recent_orders.map((order) => (
-                        <div key={order.id} className="bg-gray-50 rounded-xl p-4 border-2 border-gray-200 hover:border-green-300 transition-colors">
-                          <div className="flex justify-between items-start mb-2">
+                        <div key={order.id} className="bg-forest-50 rounded-2xl p-4 border border-forest-100 hover:border-forest-300 transition-colors">
+                          <div className="flex justify-between items-start">
                             <div>
-                              <p className="font-bold text-gray-900">Porosi #{order.order_number || order.id.substring(0, 8)}</p>
-                              <p className="text-sm text-gray-500">
+                              <p className="font-bold text-forest-900 font-sans text-sm">Porosi #{order.order_number || order.id.substring(0, 8)}</p>
+                              <p className="text-xs text-forest-500 font-sans mt-0.5">
                                 {new Date(order.created_at).toLocaleString('sq-AL')}
                               </p>
                             </div>
                             <div className="text-right">
-                              <p className="font-bold text-green-700 text-lg">{parseFloat(order.total).toFixed(2)} L</p>
-                              <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                                order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                                'bg-yellow-100 text-yellow-800'
+                              <p className="font-bold text-forest-700 font-sans">{parseFloat(order.total).toFixed(2)} L</p>
+                              <span className={`px-2 py-0.5 rounded-full text-xs font-bold mt-1 inline-block ${
+                                order.status === 'delivered' ? 'bg-forest-100 text-forest-800 border border-forest-200' :
+                                order.status === 'cancelled' ? 'bg-red-100 text-red-800 border border-red-200' :
+                                'bg-amber-100 text-amber-800 border border-amber-200'
                               }`}>
                                 {order.status}
                               </span>
@@ -446,4 +382,3 @@ export default function UsersManagement() {
     </AdminLayout>
   );
 }
-

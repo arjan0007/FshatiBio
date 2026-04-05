@@ -93,10 +93,10 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-forest-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Duke ngarkuar dashboard...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-forest-100 border-t-forest-600 mx-auto mb-4"></div>
+          <p className="text-forest-600 font-medium">Duke ngarkuar dashboard...</p>
         </div>
       </div>
     );
@@ -107,9 +107,7 @@ export default function AdminDashboard() {
       title: 'Porositë Totale',
       value: stats?.total_orders || 0,
       icon: '📦',
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700',
+      gradient: 'bg-gradient-to-br from-forest-700 to-forest-600',
       change: '+12%',
       changeType: 'positive'
     },
@@ -117,9 +115,7 @@ export default function AdminDashboard() {
       title: 'Porositë në Proces',
       value: stats?.pending_orders || 0,
       icon: '⏳',
-      color: 'from-yellow-500 to-orange-500',
-      bgColor: 'bg-yellow-50',
-      textColor: 'text-yellow-700',
+      gradient: 'bg-gradient-to-br from-amber-600 to-amber-500',
       change: '+5%',
       changeType: 'positive'
     },
@@ -127,9 +123,7 @@ export default function AdminDashboard() {
       title: 'Shitjet Sot',
       value: `${(stats?.today_sales || 0).toFixed(2)} L`,
       icon: '💰',
-      color: 'from-green-500 to-emerald-600',
-      bgColor: 'bg-green-50',
-      textColor: 'text-green-700',
+      gradient: 'bg-gradient-to-br from-honey-600 to-honey-500',
       change: '+18%',
       changeType: 'positive'
     },
@@ -137,9 +131,7 @@ export default function AdminDashboard() {
       title: 'Shitjet Javore',
       value: `${(stats?.weekly_sales || 0).toFixed(2)} L`,
       icon: '📊',
-      color: 'from-purple-500 to-indigo-600',
-      bgColor: 'bg-purple-50',
-      textColor: 'text-purple-700',
+      gradient: 'bg-gradient-to-br from-forest-600 to-forest-500',
       change: '+23%',
       changeType: 'positive'
     },
@@ -147,9 +139,7 @@ export default function AdminDashboard() {
       title: 'Shitjet Mujore',
       value: `${(stats?.monthly_sales || 0).toFixed(2)} L`,
       icon: '📈',
-      color: 'from-indigo-500 to-blue-600',
-      bgColor: 'bg-indigo-50',
-      textColor: 'text-indigo-700',
+      gradient: 'bg-gradient-to-br from-honey-600 to-honey-500',
       change: '+15%',
       changeType: 'positive'
     },
@@ -157,159 +147,162 @@ export default function AdminDashboard() {
       title: 'Përdoruesit Aktivë',
       value: stats?.active_users || 0,
       icon: '👥',
-      color: 'from-pink-500 to-rose-600',
-      bgColor: 'bg-pink-50',
-      textColor: 'text-pink-700',
+      gradient: 'bg-gradient-to-br from-forest-600 to-forest-500',
       change: '+8%',
       changeType: 'positive'
     }
   ];
+
+  const statusBadge = (status) => {
+    const map = {
+      completed:  'bg-forest-100 text-forest-800 border border-forest-200',
+      delivered:  'bg-forest-100 text-forest-800 border border-forest-200',
+      pending:    'bg-amber-100 text-amber-800 border border-amber-200',
+      confirmed:  'bg-blue-100 text-blue-800 border border-blue-200',
+      preparing:  'bg-orange-100 text-orange-800 border border-orange-200',
+      on_delivery:'bg-purple-100 text-purple-800 border border-purple-200',
+      cancelled:  'bg-red-100 text-red-800 border border-red-200',
+    };
+    return map[status] || 'bg-gray-100 text-gray-700 border border-gray-200';
+  };
 
   return (
     <AdminLayout>
       <Head>
         <title>Admin Dashboard - FshatiBio</title>
       </Head>
-      <div>
+      <div className="space-y-6">
         {/* Statistics Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {statCards.map((card, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
-              >
-                <div className={`bg-gradient-to-r ${card.color} p-6`}>
-          <div className="flex items-center justify-between">
-                    <div className="text-4xl">{card.icon}</div>
-                    <div className="text-right">
-                      <p className="text-white/80 text-sm font-medium">{card.title}</p>
-                      <p className="text-white text-3xl font-bold mt-1">{card.value}</p>
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {statCards.map((card, index) => (
+            <div
+              key={index}
+              className={`${card.gradient} text-white rounded-2xl shadow-card overflow-hidden`}
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-3xl">{card.icon}</div>
+                  <span className="text-white/70 text-xs font-semibold bg-white/10 px-2.5 py-1 rounded-full">
+                    {card.change} ↗
+                  </span>
+                </div>
+                <p className="text-white/80 text-sm font-medium mb-1">{card.title}</p>
+                <p className="text-white text-3xl font-bold">{card.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Sales Chart */}
+          <div className="bg-white rounded-2xl shadow-card p-6 border border-forest-100">
+            <h3 className="font-display text-lg text-forest-900 mb-4 flex items-center gap-2">
+              <span>📈</span> Shitjet e 7 Ditëve të Fundit
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={salesData}>
+                <defs>
+                  <linearGradient id="colorShitjet" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#2d6a4f" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#2d6a4f" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#d8f3dc" />
+                <XAxis dataKey="name" stroke="#40916c" tick={{ fontSize: 12 }} />
+                <YAxis stroke="#40916c" tick={{ fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#fff',
+                    border: '1px solid #d8f3dc',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 16px rgba(29,78,53,0.1)'
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="Shitjet"
+                  stroke="#2d6a4f"
+                  fillOpacity={1}
+                  fill="url(#colorShitjet)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Orders Chart */}
+          <div className="bg-white rounded-2xl shadow-card p-6 border border-forest-100">
+            <h3 className="font-display text-lg text-forest-900 mb-4 flex items-center gap-2">
+              <span>📊</span> Porositë e 7 Ditëve të Fundit
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={salesData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#d8f3dc" />
+                <XAxis dataKey="name" stroke="#40916c" tick={{ fontSize: 12 }} />
+                <YAxis stroke="#40916c" tick={{ fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#fff',
+                    border: '1px solid #d8f3dc',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 16px rgba(29,78,53,0.1)'
+                  }}
+                />
+                <Bar dataKey="Porositë" fill="#40916c" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
-                <div className="p-4 bg-gray-50">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">Ndryshimi nga muaji i kaluar</span>
-                    <span className={`text-sm font-semibold ${card.changeType === 'positive' ? 'text-green-600' : 'text-red-600'}`}>
-                      {card.change} ↗
-                    </span>
-                  </div>
-            </div>
-            </div>
-            ))}
-            </div>
 
-          {/* Charts Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Sales Chart */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <span>📈</span> Shitjet e 7 Ditëve të Fundit
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={salesData}>
-                  <defs>
-                    <linearGradient id="colorShitjet" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="name" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#fff', 
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px'
-                    }} 
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="Shitjet" 
-                    stroke="#10b981" 
-                    fillOpacity={1} 
-                    fill="url(#colorShitjet)" 
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Orders Chart */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <span>📊</span> Porositë e 7 Ditëve të Fundit
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={salesData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="name" stroke="#6b7280" />
-                  <YAxis stroke="#6b7280" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#fff', 
-                      border: '1px solid #e5e7eb',
-                      borderRadius: '8px'
-                    }} 
-                  />
-                  <Bar dataKey="Porositë" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Recent Orders */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+        {/* Recent Orders */}
+        <div className="bg-white rounded-2xl shadow-card overflow-hidden border border-forest-100">
+          <div className="px-6 py-4 border-b border-forest-50">
+            <h3 className="font-display text-lg text-forest-900 flex items-center gap-2">
               <span>📋</span> Porositë të Fundit
             </h3>
-            {recentOrders.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Numri i Porosisë</th>
-                      <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Klienti</th>
-                      <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Totali</th>
-                      <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">Statusi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentOrders.map((order) => (
-                      <tr key={order.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td className="py-3 px-4 text-sm text-gray-800 font-medium">{order.order_number}</td>
-                        <td className="py-3 px-4 text-sm text-gray-600">{order.user?.first_name} {order.user?.last_name}</td>
-                        <td className="py-3 px-4 text-sm text-gray-800 font-semibold">{order.total_amount?.toFixed(2)} L</td>
-                        <td className="py-3 px-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            order.status === 'completed' ? 'bg-green-100 text-green-700' :
-                            order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                            order.status === 'processing' ? 'bg-blue-100 text-blue-700' :
-                            'bg-gray-100 text-gray-700'
-                          }`}>
-                            {order.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="text-center py-12 text-gray-500">
-                <p className="text-lg">Nuk ka porosi të reja</p>
           </div>
-        )}
-            <div className="mt-4">
+          {recentOrders.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-forest-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wide">Numri i Porosisë</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wide">Klienti</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wide">Totali</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-forest-700 uppercase tracking-wide">Statusi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentOrders.map((order) => (
+                    <tr key={order.id} className="hover:bg-forest-50/50 transition-colors">
+                      <td className="px-4 py-3 border-b border-forest-50 text-sm text-forest-900 font-semibold">{order.order_number}</td>
+                      <td className="px-4 py-3 border-b border-forest-50 text-sm text-forest-700">{order.user?.first_name} {order.user?.last_name}</td>
+                      <td className="px-4 py-3 border-b border-forest-50 text-sm text-forest-900 font-bold">{order.total_amount?.toFixed(2)} L</td>
+                      <td className="px-4 py-3 border-b border-forest-50">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${statusBadge(order.status)}`}>
+                          {order.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-12 text-forest-400">
+              <p className="text-lg font-medium">Nuk ka porosi të reja</p>
+            </div>
+          )}
+          <div className="px-6 py-4 bg-forest-50/50 border-t border-forest-100">
             <a
               href="/admin/orders"
-                className="text-green-600 hover:text-green-700 font-medium text-sm flex items-center gap-2"
+              className="text-forest-700 hover:text-forest-900 font-semibold text-sm flex items-center gap-2 transition-colors"
             >
-                Shiko të gjitha porositë →
+              Shiko të gjitha porositë →
             </a>
           </div>
         </div>
-    </div>
+      </div>
     </AdminLayout>
   );
 }

@@ -111,13 +111,13 @@ export default function Products() {
       if (response.data.success) {
         const productsData = response.data.data.products || [];
         const pagination = response.data.data.pagination || {};
-        
+
         const total = pagination.total || response.data.data.total || productsData.length;
         const totalPagesFromAPI = pagination.totalPages;
-        
+
         setProducts(productsData);
         setTotalProducts(total);
-        
+
         // Calculate totalPages if not provided by API
         if (totalPagesFromAPI) {
           setTotalPages(totalPagesFromAPI);
@@ -156,7 +156,7 @@ export default function Products() {
   const handleAddToCart = async (productId, e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const token = localStorage.getItem('auth_token');
     if (!token) {
       if (typeof window !== 'undefined') {
@@ -221,52 +221,22 @@ export default function Products() {
     const size = Math.max(rect.width, rect.height);
     const x = event.clientX - rect.left - size / 2;
     const y = event.clientY - rect.top - size / 2;
-    
+
     ripple.style.width = ripple.style.height = size + 'px';
     ripple.style.left = x + 'px';
     ripple.style.top = y + 'px';
-    
+
     element.style.position = 'relative';
     element.style.overflow = 'hidden';
     element.appendChild(ripple);
-    
+
     setTimeout(() => {
       ripple.remove();
     }, 1000);
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Ultra WOW Animated Background */}
-      <div className="fixed inset-0 -z-10">
-        {/* Base Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-emerald-50 via-teal-50 to-white"></div>
-        
-        {/* Animated Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-green-100/30 via-emerald-100/20 via-teal-100/30 to-green-100/30 animate-gradient-shift"></div>
-        
-        {/* Large Animated Blobs */}
-        <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-green-200/20 rounded-full blur-3xl animate-blob"></div>
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-200/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-0 left-1/4 w-[700px] h-[700px] bg-teal-200/20 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-green-300/15 rounded-full blur-3xl animate-blob animation-delay-1000"></div>
-        
-        {/* Mesh Gradient Pattern */}
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-                           radial-gradient(circle at 80% 80%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
-                           radial-gradient(circle at 40% 20%, rgba(20, 184, 166, 0.1) 0%, transparent 50%)`
-        }}></div>
-        
-        {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: `linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
-        }}></div>
-      </div>
-      
-      <div className="relative z-0">
+    <div className="min-h-screen bg-cream-100">
       <Head>
         <title>Produktet - FshatiBio</title>
         <meta name="description" content="Shiko të gjitha produktet BIO të fshatit - FshatiBio" />
@@ -275,654 +245,382 @@ export default function Products() {
 
       <Header />
 
-      <main className="relative container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 lg:py-10 overflow-hidden">
-        {/* Ultra WOW Animated Background Blobs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-green-400/20 rounded-full blur-3xl animate-blob"></div>
-          <div className="absolute top-40 right-20 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-teal-400/20 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+      {/* Hero Banner */}
+      <div className="bg-forest-800 text-cream-100 py-12 md:py-16 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-4 left-8 text-6xl">🌿</div>
+          <div className="absolute top-8 right-16 text-4xl">🌾</div>
+          <div className="absolute bottom-4 left-1/4 text-5xl">🥛</div>
+          <div className="absolute bottom-6 right-1/3 text-3xl">✨</div>
+        </div>
+        <div className="container mx-auto px-4 md:px-6 relative z-10 text-center">
+          <p className="text-forest-200 text-sm font-semibold uppercase tracking-widest mb-3">Koleksioni ynë</p>
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-cream-100 mb-4">
+            Produktet BIO
+          </h1>
+          <p className="text-forest-200 text-base md:text-lg max-w-xl mx-auto">
+            Zgjidh nga koleksioni ynë i gjerë i produkteve të freskëta organike
+          </p>
+        </div>
+        {/* Wave divider */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+            <path d="M0 40L60 33.3C120 26.7 240 13.3 360 10C480 6.7 600 13.3 720 18.3C840 23.3 960 26.7 1080 25C1200 23.3 1320 16.7 1380 13.3L1440 10V40H1380C1320 40 1200 40 1080 40C960 40 840 40 720 40C600 40 480 40 360 40C240 40 120 40 60 40H0Z" fill="#fefae0"/>
+          </svg>
+        </div>
+      </div>
+
+      <main className="container mx-auto px-3 sm:px-4 md:px-6 py-6 md:py-10">
+
+        {/* Categories filter bar */}
+        <div
+          id="categories-section"
+          ref={categoriesRef}
+          className={`mb-6 transform transition-all duration-700 ${
+            isVisible['categories-section']
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-6'
+          }`}
+        >
+          <div className="bg-white rounded-2xl shadow-card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-forest-600 text-lg">🏷️</span>
+              <h3 className="font-semibold text-sm text-forest-700 uppercase tracking-wide">Kategoritë</h3>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/products"
+                onClick={(e) => {
+                  if (!category) {
+                    createConfetti(e.currentTarget);
+                  }
+                }}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                  !category
+                    ? 'bg-forest-700 text-white shadow-warm'
+                    : 'bg-white border border-forest-200 text-forest-700 hover:bg-forest-50'
+                }`}
+              >
+                Të Gjitha
+              </Link>
+              {categories.map((cat, index) => (
+                <Link
+                  key={cat.id}
+                  href={`/products?category=${cat.id}`}
+                  onClick={(e) => {
+                    if (category === cat.id) {
+                      createConfetti(e.currentTarget);
+                    }
+                  }}
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                    category === cat.id
+                      ? 'bg-forest-700 text-white shadow-warm'
+                      : 'bg-white border border-forest-200 text-forest-700 hover:bg-forest-50'
+                  }`}
+                >
+                  {cat.name}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Enhanced Floating Particles */}
-        {isMounted && (
-          <>
-            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-              {[...Array(15)].map((_, i) => {
-                const left = Math.random() * 100;
-                const top = Math.random() * 100;
-                const delay = Math.random() * 5;
-                const duration = 4 + Math.random() * 3;
-                return (
-                  <div
-                    key={i}
-                    className="absolute w-2 h-2 bg-green-400/30 rounded-full animate-float"
-                    style={{
-                      left: `${left}%`,
-                      top: `${top}%`,
-                      animationDelay: `${delay}s`,
-                      animationDuration: `${duration}s`
-                    }}
-                  ></div>
-                );
-              })}
-            </div>
-
-            {/* Floating Icons */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-              {['🌾', '🥛', '🌿', '✨', '⭐'].map((icon, i) => {
-                const left = 10 + Math.random() * 80;
-                const top = 10 + Math.random() * 80;
-                const delay = Math.random() * 5;
-                const duration = 5 + Math.random() * 3;
-                return (
-                  <div
-                    key={i}
-                    className="absolute text-3xl opacity-10 animate-float"
-                    style={{
-                      left: `${left}%`,
-                      top: `${top}%`,
-                      animationDelay: `${delay}s`,
-                      animationDuration: `${duration}s`
-                    }}
-                  >
-                    {icon}
+        {/* Products Grid */}
+        <div
+          id="products-section"
+          ref={productsRef}
+          className={`transform transition-all duration-700 ${
+            isVisible['products-section']
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-6'
+          }`}
+        >
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="bg-white rounded-3xl shadow-card overflow-hidden animate-pulse">
+                  <div className="w-full h-56 bg-earth-200"></div>
+                  <div className="p-5 space-y-3">
+                    <div className="h-4 bg-earth-200 rounded-full w-3/4"></div>
+                    <div className="h-4 bg-earth-200 rounded-full w-1/2"></div>
+                    <div className="h-6 bg-earth-200 rounded-full w-1/3"></div>
                   </div>
-                );
-              })}
-            </div>
-          </>
-        )}
-
-        <div className="relative z-10">
-          {/* Page Header - Ultra WOW Design */}
-          <div className="text-center mb-8 md:mb-12 relative">
-            {/* Multiple Glow Rings */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="absolute w-64 h-64 bg-green-400/10 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
-              <div className="absolute w-80 h-80 bg-teal-400/10 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
-              </div>
-
-            <div className="inline-block mb-4 relative group">
-              {/* Pulse Rings */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="absolute w-20 h-20 border-4 border-green-400/30 rounded-full animate-pulse-ring"></div>
-                <div className="absolute w-24 h-24 border-4 border-emerald-400/30 rounded-full animate-pulse-ring animation-delay-500"></div>
-                <div className="absolute w-28 h-28 border-4 border-teal-400/30 rounded-full animate-pulse-ring animation-delay-1000"></div>
-              </div>
-
-              <div className="absolute inset-0 bg-green-400 rounded-full blur-2xl opacity-40 group-hover:opacity-60 animate-pulse transition-opacity duration-500"></div>
-              <span className="relative text-4xl sm:text-5xl md:text-6xl block transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 animate-bounce">🛍️</span>
-              </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 relative inline-block group">
-              {/* Multi-layered Glow */}
-              <span className="absolute inset-0 bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></span>
-              <span className="absolute inset-0 bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent blur-xl opacity-50 animate-pulse"></span>
-              <span className="relative z-10 bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent animate-gradient-shift">
-                Produktet
-              </span>
-              
-              {/* Animated Underline */}
-              <span className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-full"></span>
-            </h1>
-            
-            <p className="text-gray-700 text-base sm:text-lg md:text-xl px-4 font-semibold relative group">
-              <span className="relative z-10">Zgjidh nga koleksioni ynë i gjerë i produkteve BIO</span>
-              <span className="absolute inset-0 text-green-400 blur-sm opacity-0 group-hover:opacity-30 transition-opacity duration-500">
-                Zgjidh nga koleksioni ynë i gjerë i produkteve BIO
-              </span>
-            </p>
-              </div>
-
-          {/* Main Content */}
-        <div className="w-full">
-            {/* Categories - Animated */}
-            <div 
-              id="categories-section"
-              ref={categoriesRef}
-              className={`mb-6 transform transition-all duration-1000 ${
-                isVisible['categories-section'] 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-10'
-              }`}
-            >
-              <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-gray-100">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-lg animate-bounce">🏷️</span>
-                  <h3 className="font-black text-sm text-gray-600 uppercase tracking-wide">Kategoritë</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href="/products"
-                    onClick={(e) => {
-                      if (!category) {
-                        createConfetti(e.currentTarget);
-                      }
-                    }}
-                    className={`group relative px-4 py-2.5 rounded-xl font-semibold text-sm transition-all transform hover:scale-110 overflow-hidden ${
-                      !category 
-                        ? 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white shadow-lg' 
-                        : 'bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300'
-                  }`}
-                    style={{ animationDelay: '0s' }}
-                  >
-                    {/* Shine Effect for Active */}
-                    {!category && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                    )}
-                    <span className="relative z-10">Të Gjitha</span>
-                </Link>
-                  {categories.map((cat, index) => (
-                  <Link
-                    key={cat.id}
-                    href={`/products?category=${cat.id}`}
-                      onClick={(e) => {
-                        if (category === cat.id) {
-                          createConfetti(e.currentTarget);
-                        }
-                      }}
-                      className={`group relative px-4 py-2.5 rounded-xl font-semibold text-sm transition-all transform hover:scale-110 overflow-hidden ${
-                      category === cat.id
-                          ? 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white shadow-lg'
-                          : 'bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300'
-                    }`}
-                      style={{ animationDelay: `${(index + 1) * 0.1}s` }}
-                  >
-                      {/* Shine Effect for Active */}
-                      {category === cat.id && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                      )}
-                      <span className="relative z-10">{cat.name}</span>
-                  </Link>
-                ))}
                 </div>
-              </div>
+              ))}
             </div>
-
-            {/* Products Grid - Animated */}
-            <div 
-              id="products-section"
-              ref={productsRef}
-              className={`transform transition-all duration-1000 ${
-                isVisible['products-section'] 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-10'
-              }`}
-            >
-            {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="bg-white rounded-lg shadow overflow-hidden animate-pulse">
-                    <div className="w-full h-40 sm:h-48 md:h-64 bg-gray-200 animate-shimmer"></div>
-                    <div className="p-3 sm:p-4 space-y-3">
-                      <div className="h-4 bg-gray-200 rounded w-3/4 animate-shimmer"></div>
-                      <div className="h-4 bg-gray-200 rounded w-1/2 animate-shimmer"></div>
-                      <div className="h-6 bg-gray-200 rounded w-1/3 animate-shimmer"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : products.length === 0 ? (
-              <div className="text-center py-12 bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/50">
-                <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-2xl font-black text-gray-800 mb-3">Nuk u gjetën produkte</h3>
-                <p className="text-gray-600 mb-6">Provoni të kërkoni diçka tjetër</p>
-                <Link
-                  href="/products"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white px-6 py-3 rounded-full font-semibold hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+          ) : products.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-3xl shadow-card">
+              <div className="text-7xl mb-4">🔍</div>
+              <h3 className="font-display text-2xl text-forest-900 font-bold mb-3">Nuk u gjetën produkte</h3>
+              <p className="text-earth-600 mb-8">Provoni të kërkoni diçka tjetër</p>
+              <Link
+                href="/products"
+                className="inline-flex items-center gap-2 bg-forest-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-forest-800 transition-all shadow-warm"
+              >
+                <span>Shiko Të Gjitha Produktet</span>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+              {products.map((product, index) => (
+                <div
+                  key={product.id}
+                  className={`product-card bg-white rounded-3xl shadow-card hover:shadow-card-hover transition-all duration-300 overflow-hidden animate-fade-in`}
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                  onMouseEnter={(e) => {
+                    createRipple(e.currentTarget, e);
+                  }}
                 >
-                  <span>Shiko Të Gjitha Produktet</span>
-                  <span>↻</span>
-                </Link>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
-                {products.map((product, index) => (
-                  <div
-                    key={product.id}
-                    className="group relative perspective-1000 product-card"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                    onMouseEnter={(e) => {
-                      createRipple(e.currentTarget, e);
-                    }}
-                  >
-                    {/* 3D Card Container */}
-                    <div className="relative h-full transform-style-preserve-3d transition-all duration-700 group-hover:rotate-y-6 group-hover:-translate-y-2">
-                      {/* Front of Card - Glassmorphism */}
-                      <div className="relative h-full bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-white/50 overflow-hidden transform translate-z-0 group-hover:translate-z-10 group-hover:shadow-3xl transition-all duration-700">
-                        {/* Animated Gradient Background */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-green-400/0 via-emerald-300/0 to-teal-400/0 group-hover:from-green-400/10 group-hover:via-emerald-300/10 group-hover:to-teal-400/10 transition-all duration-700"></div>
-                        
-                        {/* Glassmorphism Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-white/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        
-                        {/* Sparkle Particles */}
-                        {isMounted && (
-                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                            {[...Array(6)].map((_, i) => {
-                              const left = 20 + Math.random() * 60;
-                              const top = 20 + Math.random() * 60;
-                              const delay = Math.random() * 2;
-                              return (
-                                <div
-                                  key={i}
-                                  className="absolute w-1 h-1 bg-white rounded-full animate-sparkle"
-                                  style={{
-                                    left: `${left}%`,
-                                    top: `${top}%`,
-                                    animationDelay: `${delay}s`
-                                  }}
-                                ></div>
-                              );
-                            })}
-                          </div>
-                        )}
-                        
-                        {/* Shine Effect */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 overflow-hidden">
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
-                        </div>
-                        
-                        {/* Image Container - Clickable Link */}
-                        <Link href={`/products/${product.id}`} className="relative overflow-hidden h-40 sm:h-48 md:h-56 lg:h-64 block">
-                          {product.image_urls && product.image_urls.length > 0 ? (
-                            <>
+                  {/* Image area */}
+                  <Link href={`/products/${product.id}`} className="image-zoom h-56 block relative overflow-hidden">
+                    {product.image_urls && product.image_urls.length > 0 ? (
                       <img
                         src={product.image_urls[0]}
                         alt={product.name}
-                                className="w-full h-full object-cover transform group-hover:scale-125 transition-transform duration-700"
+                        className="w-full h-full rounded-2xl object-cover"
                       />
-                              {/* Gradient Overlay on Image */}
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            </>
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-green-100 via-emerald-100 to-teal-100 flex items-center justify-center group-hover:from-green-200 group-hover:via-emerald-200 group-hover:to-teal-200 transition-all duration-500">
-                              <span className="text-5xl sm:text-6xl md:text-7xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-700">🌾</span>
-                          </div>
-                          )}
-                          
-                          {/* BIO Badge - Enhanced */}
-                        {product.is_bio && (
-                            <div className="absolute top-3 right-3 md:top-4 md:right-4 z-20">
-                              <div className="relative">
-                                <div className="absolute inset-0 bg-green-500 rounded-full blur-lg opacity-60 animate-pulse"></div>
-                                <div className="relative bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-black shadow-2xl transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 border-2 border-white/50">
-                                  <span className="relative z-10 flex items-center gap-1">
-                                    <span className="text-sm">✨</span>
-                                    <span>BIO</span>
-                          </span>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          
-                          {/* Stock Status */}
-                          {product.stock_quantity === 0 && (
-                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30">
-                              <div className="bg-gradient-to-r from-red-600 to-rose-600 text-white px-4 py-2 md:px-5 md:py-3 rounded-xl font-black text-sm md:text-base shadow-2xl transform group-hover:scale-110 transition-transform duration-300 border-2 border-white/30">
-                                Jashtë Stokut
-                              </div>
-                            </div>
-                        )}
-                      </Link>
-                        
-                        {/* Content */}
-                        <div className="relative z-10 p-3 sm:p-4 md:p-5 lg:p-6 bg-white/80 backdrop-blur-md">
-                          {/* Product Name */}
-                          <h3 className="font-black text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3 text-gray-800 group-hover:text-green-600 transition-colors duration-500 line-clamp-2 relative">
-                            <span className="relative z-10">{product.name}</span>
-                            <span className="absolute inset-0 text-green-400 blur-sm opacity-0 group-hover:opacity-30 transition-opacity duration-500">
-                              {product.name}
-                            </span>
-                          </h3>
-                          
-                          {/* Price and Rating */}
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="relative flex-shrink-0">
-                              {/* Price with Glow */}
-                              <div className="relative">
-                                <p className="text-green-700 font-black text-lg sm:text-xl md:text-2xl lg:text-3xl transform group-hover:scale-110 transition-transform duration-300 relative z-10">
-                                  {product.price} L
-                                </p>
-                                <p className="absolute inset-0 text-green-400 blur-md opacity-50 group-hover:opacity-100 transition-opacity duration-300">
-                                  {product.price} L
-                                </p>
-                              </div>
-                              <p className="text-gray-500 text-[10px] sm:text-xs md:text-sm font-semibold mt-0.5 sm:mt-1">
-                                / {product.unit}
-                              </p>
-                            </div>
-                            
-                            {/* Rating with Animation */}
-                            {product.average_rating > 0 && (
-                              <div className="flex items-center gap-1 sm:gap-1.5 bg-yellow-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border-2 border-yellow-200 group-hover:border-yellow-300 group-hover:bg-yellow-100 transition-all duration-300 transform group-hover:scale-110 flex-shrink-0">
-                                <span className="text-yellow-400 text-sm sm:text-base md:text-lg transform group-hover:rotate-12 group-hover:scale-125 transition-all duration-300">⭐</span>
-                                <span className="text-[10px] sm:text-xs md:text-sm font-black text-gray-800">
-                                  {product.average_rating.toFixed(1)}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                          
-                          {/* Action Buttons */}
-                          <div className="mt-3 sm:mt-4 flex gap-1.5 sm:gap-2">
-                            <Link
-                              href={`/products/${product.id}`}
-                              className="flex-1 inline-flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full shadow-lg hover:from-green-600 hover:to-emerald-600 transition-all transform hover:scale-105 text-xs sm:text-sm font-black"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <span className="hidden sm:inline">Detajet</span>
-                              <span className="sm:hidden">Detaje</span>
-                              <span className="transform group-hover:translate-x-1 transition-transform duration-300 text-xs sm:text-sm">→</span>
-                            </Link>
-                            <button
-                              onClick={(e) => handleAddToCart(product.id, e)}
-                              disabled={addingToCart[product.id] || product.stock_quantity === 0}
-                              className="flex-1 inline-flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full shadow-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm font-black"
-                            >
-                              {addingToCart[product.id] ? (
-                                <>
-                                  <span className="hidden sm:inline">Duke shtuar...</span>
-                                  <span className="sm:hidden">...</span>
-                                  <span className="animate-spin text-xs sm:text-sm">⏳</span>
-                                </>
-                              ) : (
-                                <>
-                                  <span className="hidden sm:inline">🛒 Shto</span>
-                                  <span className="sm:hidden">🛒</span>
-                                </>
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                        
-                        {/* Corner Accents */}
-                        <div className="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-green-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-tr-2xl transform group-hover:scale-110"></div>
-                        <div className="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-bl-2xl transform group-hover:scale-110"></div>
-                        
+                    ) : (
+                      <div className="w-full h-full bg-forest-50 flex items-center justify-center">
+                        <span className="text-6xl">🌾</span>
                       </div>
+                    )}
+
+                    {/* BIO Badge */}
+                    {product.is_bio && (
+                      <div className="absolute top-3 left-3 z-20">
+                        <span className="bg-forest-100 text-forest-700 text-xs font-bold px-3 py-1 rounded-full border border-forest-200">
+                          🌿 BIO
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Out of stock overlay */}
+                    {product.stock_quantity === 0 && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+                        <span className="bg-white text-forest-900 px-4 py-2 rounded-full font-bold text-sm">
+                          Jashtë Stokut
+                        </span>
+                      </div>
+                    )}
+                  </Link>
+
+                  {/* Card content */}
+                  <div className="p-4 md:p-5">
+                    <h3 className="font-semibold text-forest-900 text-base md:text-lg mb-2 line-clamp-2">
+                      {product.name}
+                    </h3>
+
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <div>
+                        <p className="font-display text-xl text-forest-700 font-bold leading-none">
+                          {product.price} L
+                        </p>
+                        <p className="text-earth-500 text-xs mt-0.5">/ {product.unit}</p>
+                      </div>
+                      {product.average_rating > 0 && (
+                        <div className="flex items-center gap-1 bg-honey-50 px-2 py-1 rounded-full border border-honey-200">
+                          <span className="text-honey-500 text-sm">★</span>
+                          <span className="text-xs font-bold text-forest-800">
+                            {product.average_rating.toFixed(1)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/products/${product.id}`}
+                        className="flex-1 inline-flex items-center justify-center gap-1 border-2 border-forest-700 text-forest-700 px-3 py-2 rounded-full font-semibold hover:bg-forest-50 transition-all text-sm"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Detajet
+                      </Link>
+                      <button
+                        onClick={(e) => handleAddToCart(product.id, e)}
+                        disabled={addingToCart[product.id] || product.stock_quantity === 0}
+                        className="flex-1 inline-flex items-center justify-center gap-1 bg-honey-500 text-white px-3 py-2 rounded-full font-semibold hover:bg-honey-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                      >
+                        {addingToCart[product.id] ? (
+                          <span className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></span>
+                        ) : (
+                          <>🛒 Shto</>
+                        )}
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-            </div>
-            
-            {/* Pagination - Enhanced */}
-            {!loading && products.length > 0 && totalPages > 1 && (
-              <div className="mt-6 sm:mt-8 md:mt-12 flex flex-col items-center gap-3 sm:gap-4 relative">
-                {/* Background Glow */}
-                <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-emerald-400/10 to-teal-400/10 rounded-2xl blur-xl"></div>
-                
-                <div className="relative text-xs sm:text-sm text-gray-600 font-semibold bg-white/80 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border border-gray-200 text-center">
-                  Shfaqen {((currentPage - 1) * 9) + 1} - {Math.min(currentPage * 9, totalProducts)} nga {totalProducts} produkte
                 </div>
-                <div className="relative flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all transform ${
-                      currentPage === 1
-                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 hover:scale-105 shadow-lg hover:shadow-xl'
-                    }`}
-                  >
-                    <span className="hidden sm:inline">← Para</span>
-                    <span className="sm:hidden">←</span>
-                  </button>
-                  
-                  <div className="flex items-center gap-1 flex-wrap justify-center">
-                    {totalPages <= 7 ? (
-                      // Show all pages if 7 or less
-                      Array.from({ length: totalPages }, (_, i) => {
-                        const pageNum = i + 1;
-                        return (
-                          <button
-                            key={pageNum}
-                            onClick={() => handlePageChange(pageNum)}
-                            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-semibold text-xs sm:text-sm transition-all transform ${
-                              currentPage === pageNum
-                                ? 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white shadow-lg scale-110'
-                                : 'bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105'
-                            }`}
-                          >
-                            {pageNum}
-                          </button>
-                        );
-                      })
-                    ) : (
-                      // Show pages with ellipsis for more than 7 pages
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Pagination */}
+        {!loading && products.length > 0 && totalPages > 1 && (
+          <div className="mt-10 flex flex-col items-center gap-4">
+            <div className="text-sm text-earth-600 font-medium">
+              Shfaqen {((currentPage - 1) * 9) + 1} - {Math.min(currentPage * 9, totalProducts)} nga {totalProducts} produkte
+            </div>
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-full font-semibold text-sm transition-all ${
+                  currentPage === 1
+                    ? 'bg-earth-100 text-earth-400 cursor-not-allowed'
+                    : 'bg-forest-700 text-white hover:bg-forest-800 shadow-warm'
+                }`}
+              >
+                ← Para
+              </button>
+
+              <div className="flex items-center gap-1 flex-wrap justify-center">
+                {totalPages <= 7 ? (
+                  Array.from({ length: totalPages }, (_, i) => {
+                    const pageNum = i + 1;
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`w-10 h-10 rounded-full font-semibold text-sm transition-all ${
+                          currentPage === pageNum
+                            ? 'bg-forest-700 text-white shadow-warm'
+                            : 'bg-white text-forest-700 border border-forest-200 hover:bg-forest-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })
+                ) : (
+                  <>
+                    {currentPage > 4 && (
                       <>
-                        {currentPage > 4 && (
-                          <>
-                            <button
-                              onClick={() => handlePageChange(1)}
-                              className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-semibold text-xs sm:text-sm bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105 transition-all transform"
-                            >
-                              1
-                            </button>
-                            {currentPage > 5 && (
-                              <span className="px-1 sm:px-2 text-gray-500 text-xs sm:text-sm">...</span>
-                            )}
-                          </>
-                        )}
-                        
-                        {Array.from({ length: Math.min(7, totalPages) }, (_, i) => {
-                          let pageNum;
-                          if (currentPage <= 4) {
-                            pageNum = i + 1;
-                          } else if (currentPage >= totalPages - 3) {
-                            pageNum = totalPages - 6 + i;
-                          } else {
-                            pageNum = currentPage - 3 + i;
-                          }
-                          
-                          if (pageNum < 1 || pageNum > totalPages) return null;
-                          
-                          return (
-                            <button
-                              key={pageNum}
-                              onClick={() => handlePageChange(pageNum)}
-                              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-semibold text-xs sm:text-sm transition-all transform ${
-                                currentPage === pageNum
-                                  ? 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white shadow-lg scale-110'
-                                  : 'bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105'
-                              }`}
-                            >
-                              {pageNum}
-                            </button>
-                          );
-                        })}
-                        
-                        {currentPage < totalPages - 3 && (
-                          <>
-                            {currentPage < totalPages - 4 && (
-                              <span className="px-1 sm:px-2 text-gray-500 text-xs sm:text-sm">...</span>
-                            )}
-                            <button
-                              onClick={() => handlePageChange(totalPages)}
-                              className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-semibold text-xs sm:text-sm bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 hover:scale-105 transition-all transform"
-                            >
-                              {totalPages}
-                            </button>
-                          </>
+                        <button
+                          onClick={() => handlePageChange(1)}
+                          className="w-10 h-10 rounded-full font-semibold text-sm bg-white text-forest-700 border border-forest-200 hover:bg-forest-50 transition-all"
+                        >
+                          1
+                        </button>
+                        {currentPage > 5 && (
+                          <span className="px-2 text-earth-500 text-sm">...</span>
                         )}
                       </>
                     )}
-                  </div>
-                  
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-semibold text-xs sm:text-sm transition-all transform ${
-                      currentPage === totalPages
-                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 hover:scale-105 shadow-lg hover:shadow-xl'
-                    }`}
-                  >
-                    <span className="hidden sm:inline">Tjetër →</span>
-                    <span className="sm:hidden">→</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </main>
-      
 
-      {/* Footer - Compact, Organized & WOW */}
-      <footer className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-3 md:py-4 mt-3 md:mt-4 overflow-hidden">
-        {/* Animated Background Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 via-emerald-600/5 to-teal-600/5 animate-gradient-shift"></div>
-        
-        {/* Animated Top Border */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent animate-pulse"></div>
-        
-        {/* Subtle Floating Particles */}
-        {isMounted && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(6)].map((_, i) => {
-              const left = Math.random() * 100;
-              const top = Math.random() * 100;
-              const delay = Math.random() * 3;
-              const duration = 3 + Math.random() * 2;
-              return (
-                <div
-                  key={i}
-                  className="absolute w-0.5 h-0.5 bg-green-400 rounded-full opacity-20 animate-float"
-                  style={{
-                    left: `${left}%`,
-                    top: `${top}%`,
-                    animationDelay: `${delay}s`,
-                    animationDuration: `${duration}s`
-                  }}
-                ></div>
-              );
-            })}
+                    {Array.from({ length: Math.min(7, totalPages) }, (_, i) => {
+                      let pageNum;
+                      if (currentPage <= 4) {
+                        pageNum = i + 1;
+                      } else if (currentPage >= totalPages - 3) {
+                        pageNum = totalPages - 6 + i;
+                      } else {
+                        pageNum = currentPage - 3 + i;
+                      }
+
+                      if (pageNum < 1 || pageNum > totalPages) return null;
+
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => handlePageChange(pageNum)}
+                          className={`w-10 h-10 rounded-full font-semibold text-sm transition-all ${
+                            currentPage === pageNum
+                              ? 'bg-forest-700 text-white shadow-warm'
+                              : 'bg-white text-forest-700 border border-forest-200 hover:bg-forest-50'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+
+                    {currentPage < totalPages - 3 && (
+                      <>
+                        {currentPage < totalPages - 4 && (
+                          <span className="px-2 text-earth-500 text-sm">...</span>
+                        )}
+                        <button
+                          onClick={() => handlePageChange(totalPages)}
+                          className="w-10 h-10 rounded-full font-semibold text-sm bg-white text-forest-700 border border-forest-200 hover:bg-forest-50 transition-all"
+                        >
+                          {totalPages}
+                        </button>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-full font-semibold text-sm transition-all ${
+                  currentPage === totalPages
+                    ? 'bg-earth-100 text-earth-400 cursor-not-allowed'
+                    : 'bg-forest-700 text-white hover:bg-forest-800 shadow-warm'
+                }`}
+              >
+                Tjetër →
+              </button>
+            </div>
           </div>
         )}
-        
-        <div className="container mx-auto px-3 sm:px-4 relative z-10">
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4">
-            {/* Column 1: Logo + Social Media */}
-            <div className="group relative">
-              <div className="absolute inset-0 bg-green-400/0 group-hover:bg-green-400/5 rounded transition-all duration-500"></div>
-              <div className="relative text-center sm:text-left">
-                <h3 className="text-base md:text-lg font-black mb-0.5 flex items-center justify-center sm:justify-start gap-1.5 transform group-hover:scale-105 transition-transform duration-300">
-                  <span className="text-lg md:text-xl transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-300">🥛</span>
-                  <span className="bg-gradient-to-r from-white via-green-200 to-white bg-clip-text text-transparent animate-gradient-shift relative">
-                    FshatiBio
-                    <span className="absolute inset-0 bg-green-400 blur-sm opacity-0 group-hover:opacity-50 transition-opacity duration-300">FshatiBio</span>
-                  </span>
-                </h3>
-                <p className="text-gray-400 text-[10px] sm:text-xs group-hover:text-gray-300 transition-colors duration-300 mb-2">
-                  Platforma më e besueshme për produkte BIO
-                </p>
-                
-                {/* Social Media Icons */}
-                <div className="flex gap-2 justify-center sm:justify-start">
-                  {[
-                    { icon: '📘', label: 'Facebook', href: '#' },
-                    { icon: '📷', label: 'Instagram', href: '#' },
-                    { icon: '🐦', label: 'Twitter', href: '#' }
-                  ].map((social, i) => (
-                    <a
-                      key={i}
-                      href={social.href}
-                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-sm sm:text-base hover:bg-green-500/20 hover:scale-110 hover:rotate-12 transition-all duration-300 cursor-pointer border border-white/10 hover:border-green-400/50 group/social"
-                      aria-label={social.label}
-                    >
-                      <span className="transform group-hover/social:scale-125 transition-transform duration-300">{social.icon}</span>
-                    </a>
-                  ))}
-                </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-forest-900 text-cream-100 py-8 mt-10">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-3 gap-6">
+            <div>
+              <h3 className="font-display text-lg font-bold mb-2 text-cream-100">🥛 FshatiBio</h3>
+              <p className="text-forest-300 text-xs mb-3">Platforma më e besueshme për produkte BIO</p>
+              <div className="flex gap-2">
+                {[
+                  { icon: '📘', label: 'Facebook', href: '#' },
+                  { icon: '📷', label: 'Instagram', href: '#' },
+                  { icon: '🐦', label: 'Twitter', href: '#' }
+                ].map((social, i) => (
+                  <a
+                    key={i}
+                    href={social.href}
+                    className="w-8 h-8 rounded-full bg-forest-700 flex items-center justify-center text-sm hover:bg-forest-600 transition-colors"
+                    aria-label={social.label}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
               </div>
             </div>
-            
-            {/* Column 2: Quick Links */}
-            <div className="group relative">
-              <div className="absolute inset-0 bg-green-400/0 group-hover:bg-green-400/5 rounded transition-all duration-500"></div>
-              <div className="relative">
-                <h4 className="font-black mb-1.5 sm:mb-1 text-[10px] sm:text-xs relative inline-block text-left w-full">
-                  <span className="relative z-10">Linqe të Shpejta</span>
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-emerald-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
-                </h4>
-                <ul className="space-y-0.5 text-[10px] sm:text-xs text-gray-400">
-                  {[
-                    { href: '/products', label: 'Produktet', icon: '🛍️' },
-                    { href: '/cart', label: 'Shporta', icon: '🛒' },
-                    { href: '/orders', label: 'Porositë', icon: '📦' },
-                    { href: '/profile', label: 'Profili', icon: '👤' }
-                  ].map((link) => (
-                    <li key={link.href} className="text-left">
-                      <Link 
-                        href={link.href} 
-                        className="group/link flex items-center gap-1 hover:text-white transition-all duration-300 relative overflow-hidden"
-                      >
-                        <span className="text-[10px] sm:text-xs transform group-hover/link:scale-125 group-hover/link:rotate-12 transition-all duration-300">{link.icon}</span>
-                        <span className="relative z-10 transform group-hover/link:translate-x-1 transition-transform duration-300">{link.label}</span>
-                        <span className="absolute left-0 bottom-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-emerald-400 w-0 group-hover/link:w-full transition-all duration-500"></span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div>
+              <h4 className="font-semibold text-xs uppercase tracking-wide text-forest-300 mb-2">Linqe të Shpejta</h4>
+              <ul className="space-y-1 text-xs text-forest-400">
+                {[
+                  { href: '/products', label: 'Produktet' },
+                  { href: '/cart', label: 'Shporta' },
+                  { href: '/orders', label: 'Porositë' },
+                  { href: '/profile', label: 'Profili' }
+                ].map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="hover:text-cream-100 transition-colors">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            
-            {/* Column 3: Contact (Phone + Email) */}
-            <div className="group relative">
-              <div className="absolute inset-0 bg-green-400/0 group-hover:bg-green-400/5 rounded transition-all duration-500"></div>
-              <div className="relative">
-                <h4 className="font-black mb-1.5 sm:mb-1 text-[10px] sm:text-xs relative inline-block text-left w-full">
-                  <span className="relative z-10">Kontakt</span>
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 to-emerald-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></span>
-                </h4>
-                <div className="space-y-0.5 text-[10px] sm:text-xs text-gray-400">
-                  <p className="group/phone text-left">
-                    <span className="text-[10px] sm:text-xs mr-0.5">📞</span>
-                    <a 
-                      href="tel:+35569XXXXXXX" 
-                      className="hover:text-green-400 transition-colors duration-300 relative group/link block"
-                    >
-                      <span className="relative z-10">+355 69 XXX XXXX</span>
-                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-400 transform scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300"></span>
-                    </a>
-                  </p>
-                  <p className="group/email text-left">
-                    <span className="text-[10px] sm:text-xs mr-0.5">📧</span>
-                    <a 
-                      href="mailto:info@fshatibio.com" 
-                      className="hover:text-green-400 transition-colors duration-300 relative group/link break-all block"
-                    >
-                      <span className="relative z-10">info@fshatibio.com</span>
-                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-400 transform scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300"></span>
-                    </a>
-                  </p>
-                </div>
+            <div>
+              <h4 className="font-semibold text-xs uppercase tracking-wide text-forest-300 mb-2">Kontakt</h4>
+              <div className="space-y-1 text-xs text-forest-400">
+                <p><a href="tel:+35569XXXXXXX" className="hover:text-cream-100 transition-colors">📞 +355 69 XXX XXXX</a></p>
+                <p><a href="mailto:info@fshatibio.com" className="hover:text-cream-100 transition-colors break-all">📧 info@fshatibio.com</a></p>
               </div>
             </div>
           </div>
-          
-          {/* Copyright - Compact */}
-          <div className="border-t border-gray-700/50 mt-3 sm:mt-2 pt-2 sm:pt-2 text-center relative">
-            {/* Animated Gradient Line */}
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/30 to-transparent"></div>
-            
-            <p className="text-gray-500 text-[10px] sm:text-xs relative inline-block group px-2 sm:px-0">
-              <span className="relative z-10 break-words">
-                &copy; 2025 FshatiBio. Të gjitha të drejtat e rezervuara.
-              </span>
-              <span className="absolute inset-0 text-green-400 blur-sm opacity-0 group-hover:opacity-50 transition-opacity duration-300">
-                &copy; 2025 FshatiBio. Të gjitha të drejtat e rezervuara.
-              </span>
-            </p>
+          <div className="border-t border-forest-700 mt-6 pt-4 text-center">
+            <p className="text-forest-400 text-xs">&copy; 2025 FshatiBio. Të gjitha të drejtat e rezervuara.</p>
           </div>
         </div>
-        
-        {/* Subtle Bottom Glow */}
-        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-green-500/5 to-transparent pointer-events-none"></div>
       </footer>
 
       {/* Toast Notification */}
@@ -934,7 +632,6 @@ export default function Products() {
           duration={3000}
         />
       )}
-      </div>
     </div>
   );
 }
