@@ -72,7 +72,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         _addresses = addresses;
         _selectedAddress = addresses.firstWhere(
           (addr) => addr['is_default'] == true,
-          orElse: () => addresses.isNotEmpty ? addresses.first : null,
+          orElse: () => addresses.isNotEmpty ? addresses.first : <String, dynamic>{},
         );
         _loadingAddresses = false;
       });

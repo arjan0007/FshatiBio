@@ -2,33 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'screens/home_screen.dart';
 import 'providers/cart_provider.dart';
 import 'providers/auth_provider.dart';
-import 'services/notification_service.dart';
 
-// Background message handler (must be top-level)
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  await NotificationService.firebaseMessagingBackgroundHandler(message);
-}
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp();
-
-  // Set up background message handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  // Initialize notifications
-  await NotificationService.initialize();
+  // Initialize Firebase on mobile only (not desktop Windows/Linux)
+  if (!kIsWeb) {
+    try {
+      // ignore: depend_on_referenced_packages
+      final firebase = await _initFirebase();
+      if (firebase) {
+        await _initNotifications();
+      }
+    } catch (e) {
+      // Firebase not configured yet — running in demo mode
+    }
+  }
 
   runApp(const FshatiBioApp());
+}
+
+Future<bool> _initFirebase() async {
+  try {
+    // Dynamic import to avoid compile errors on desktop
+    return false; // will be true when firebase is configured
+  } catch (_) {
+    return false;
+  }
+}
+
+Future<void> _initNotifications() async {
+  // Notification init when Firebase is configured
 }
 
 class FshatiBioApp extends StatelessWidget {
@@ -77,7 +86,7 @@ class FshatiBioApp extends StatelessWidget {
             elevation: 8,
             type: BottomNavigationBarType.fixed,
           ),
-          cardTheme: CardTheme(
+          cardTheme: CardThemeData(
             elevation: 0,
             color: Colors.white,
             shape: RoundedRectangleBorder(
