@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
@@ -10,6 +11,18 @@ import 'notifications_screen.dart';
 import 'profile_edit_screen.dart';
 import 'change_password_screen.dart';
 import 'address_management_screen.dart';
+
+const Color forestDark  = Color(0xFF1B4332);
+const Color forestMid   = Color(0xFF2D6A4F);
+const Color forestLight = Color(0xFF40916C);
+const Color forestPale  = Color(0xFF52B788);
+const Color forestGhost = Color(0xFFD8F3DC);
+const Color honeyDark   = Color(0xFFE76F51);
+const Color honeyMid    = Color(0xFFF4A261);
+const Color creamBg     = Color(0xFFFEFAE0);
+const Color earthLight  = Color(0xFFE8D5C4);
+const Color textDark    = Color(0xFF1B2F1E);
+const Color textMuted   = Color(0xFF6B7C73);
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -25,7 +38,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadUnreadCount();
-    // Refresh count every 30 seconds
     Future.delayed(const Duration(seconds: 30), () {
       if (mounted) {
         _loadUnreadCount();
@@ -47,212 +59,397 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final auth = context.watch<AuthProvider>();
 
     if (auth.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Scaffold(
+        backgroundColor: creamBg,
+        body: Center(child: CircularProgressIndicator(color: forestMid)),
+      );
     }
 
     if (!auth.isAuthenticated) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.lock_outline, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
-            const Text('Duhet të kyçeni për të parë profilin'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                );
-              },
-              child: const Text('Kyçu'),
+      return Scaffold(
+        backgroundColor: creamBg,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: const BoxDecoration(
+                    color: forestGhost,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.person_outline,
+                      size: 56, color: forestMid),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Kyçu për profilin',
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: textDark,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Duhet të kyçeni për të parë profilin tuaj',
+                  style: GoogleFonts.nunito(fontSize: 14, color: textMuted),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 28),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: forestMid,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
+                  ),
+                  child: Text('Kyçu',
+                      style: GoogleFonts.nunito(fontWeight: FontWeight.bold)),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       );
     }
 
     final user = auth.user!;
+    final initials =
+        '${user.firstName.isNotEmpty ? user.firstName[0] : ''}${user.lastName.isNotEmpty ? user.lastName[0] : ''}'
+            .toUpperCase();
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          Text(
-            'Përshëndetje, ${user.firstName}!',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 30),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.email),
-              title: Text(user.email),
-              subtitle: const Text('Email'),
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.phone),
-              title: Text(user.phone ?? '-'),
-              subtitle: const Text('Telefon'),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.edit),
-              title: const Text('Ndrysho Profil'),
-              subtitle: const Text('Ndrysho të dhënat personale'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const ProfileEditScreen(),
-                  ),
-                );
-              },
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.lock),
-              title: const Text('Ndrysho Fjalëkalimin'),
-              subtitle: const Text('Ndrysho fjalëkalimin e llogarisë'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const ChangePasswordScreen(),
-                  ),
-                );
-              },
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.location_on),
-              title: const Text('Adresat e Mia'),
-              subtitle: const Text('Menaxho adresat e dorëzimit'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const AddressManagementScreen(),
-                  ),
-                );
-              },
-            ),
-          ),
-          Card(
-            child: ListTile(
-              leading: Stack(
+    return Scaffold(
+      backgroundColor: creamBg,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Top gradient header
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [forestDark, forestMid],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(32)),
+              ),
+              padding: const EdgeInsets.fromLTRB(24, 56, 24, 32),
+              child: Column(
                 children: [
-                  const Icon(Icons.notifications),
-                  if (_unreadNotificationCount > 0)
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 16,
-                          minHeight: 16,
-                        ),
-                        child: Text(
-                          _unreadNotificationCount > 99 ? '99+' : '$_unreadNotificationCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
+                  // Avatar
+                  Container(
+                    width: 84,
+                    height: 84,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: Colors.white.withOpacity(0.4), width: 2),
+                    ),
+                    child: Center(
+                      child: Text(
+                        initials,
+                        style: GoogleFonts.playfairDisplay(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    '${user.firstName} ${user.lastName}',
+                    style: GoogleFonts.playfairDisplay(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    user.email,
+                    style: GoogleFonts.nunito(
+                        color: Colors.white70, fontSize: 13),
+                  ),
                 ],
               ),
-              title: Row(
+            ),
+
+            const SizedBox(height: 24),
+
+            // Menu items
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
                 children: [
-                  const Text('Njoftimet'),
-                  if (_unreadNotificationCount > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          _unreadNotificationCount > 99 ? '99+' : '$_unreadNotificationCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                  _menuItem(
+                    icon: Icons.person_outline,
+                    label: 'Ndrysho Profil',
+                    subtitle: 'Ndrysho të dhënat personale',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const ProfileEditScreen()),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  _menuItem(
+                    icon: Icons.lock_outline,
+                    label: 'Ndrysho Fjalëkalimin',
+                    subtitle: 'Ndrysho fjalëkalimin e llogarisë',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const ChangePasswordScreen()),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  _menuItem(
+                    icon: Icons.location_on_outlined,
+                    label: 'Adresat e Mia',
+                    subtitle: 'Menaxho adresat e dorëzimit',
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const AddressManagementScreen()),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  _menuItemWithBadge(
+                    icon: Icons.notifications_outlined,
+                    label: 'Njoftimet',
+                    subtitle: _unreadNotificationCount > 0
+                        ? '$_unreadNotificationCount njoftime të palexuara'
+                        : 'Shiko njoftimet e tua',
+                    badgeCount: _unreadNotificationCount,
+                    onTap: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const NotificationsScreen()),
+                      );
+                      _loadUnreadCount();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  _menuItem(
+                    icon: Icons.favorite_outline,
+                    label: 'Lista e Dëshirave',
+                    subtitle: 'Produktet që ke ruajtur',
+                    iconColor: honeyDark,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const WishlistScreen()),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 28),
+
+                  // Logout button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        await auth.logout();
+                        context.read<CartProvider>().updateAuthToken(null);
+                      },
+                      icon: const Icon(Icons.logout, size: 18),
+                      label: Text('Dil nga llogaria',
+                          style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold, fontSize: 15)),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: honeyDark,
+                        side: const BorderSide(color: honeyDark, width: 1.5),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50)),
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 32),
                 ],
               ),
-              subtitle: Text(
-                _unreadNotificationCount > 0
-                    ? '$_unreadNotificationCount njoftime të palexuara'
-                    : 'Shiko njoftimet e tua',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _menuItem({
+    required IconData icon,
+    required String label,
+    required String subtitle,
+    required VoidCallback onTap,
+    Color iconColor = forestMid,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: forestMid.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconColor == forestMid
+                    ? forestGhost
+                    : honeyDark.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const NotificationsScreen(),
-                  ),
-                );
-                // Refresh count after returning from notifications screen
-                _loadUnreadCount();
-              },
+              child: Icon(icon, color: iconColor, size: 20),
             ),
-          ),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.favorite, color: Colors.red),
-              title: const Text('Lista e Dëshirave'),
-              subtitle: const Text('Produktet që ke ruajtur'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const WishlistScreen(),
-                  ),
-                );
-              },
-            ),
-          ),
-          const Spacer(),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () async {
-                await auth.logout();
-                context.read<CartProvider>().updateAuthToken(null);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label,
+                      style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: textDark)),
+                  Text(subtitle,
+                      style:
+                          GoogleFonts.nunito(fontSize: 12, color: textMuted)),
+                ],
               ),
-              child: const Text('Dil'),
             ),
-          ),
-          const SizedBox(height: 20),
-        ],
+            const Icon(Icons.chevron_right, color: textMuted, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _menuItemWithBadge({
+    required IconData icon,
+    required String label,
+    required String subtitle,
+    required int badgeCount,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: forestMid.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: forestGhost,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.notifications_outlined,
+                      color: forestMid, size: 20),
+                ),
+                if (badgeCount > 0)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(3),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFDC2626),
+                        shape: BoxShape.circle,
+                      ),
+                      constraints:
+                          const BoxConstraints(minWidth: 16, minHeight: 16),
+                      child: Text(
+                        badgeCount > 99 ? '99+' : '$badgeCount',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(label,
+                          style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: textDark)),
+                      if (badgeCount > 0) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFDC2626),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text(
+                            badgeCount > 99 ? '99+' : '$badgeCount',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  Text(subtitle,
+                      style:
+                          GoogleFonts.nunito(fontSize: 12, color: textMuted)),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: textMuted, size: 20),
+          ],
+        ),
       ),
     );
   }
 }
-

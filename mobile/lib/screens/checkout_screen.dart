@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart_summary.dart';
@@ -7,6 +8,18 @@ import '../providers/cart_provider.dart';
 import '../services/api_service.dart';
 import 'address_management_screen.dart';
 import 'order_detail_screen.dart';
+
+const Color forestDark  = Color(0xFF1B4332);
+const Color forestMid   = Color(0xFF2D6A4F);
+const Color forestLight = Color(0xFF40916C);
+const Color forestPale  = Color(0xFF52B788);
+const Color forestGhost = Color(0xFFD8F3DC);
+const Color honeyDark   = Color(0xFFE76F51);
+const Color honeyMid    = Color(0xFFF4A261);
+const Color creamBg     = Color(0xFFFEFAE0);
+const Color earthLight  = Color(0xFFE8D5C4);
+const Color textDark    = Color(0xFF1B2F1E);
+const Color textMuted   = Color(0xFF6B7C73);
 
 class CheckoutScreen extends StatefulWidget {
   final CartSummary cart;
@@ -21,7 +34,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final _formKey = GlobalKey<FormState>();
   final _notesController = TextEditingController();
   final _couponController = TextEditingController();
-  
+
   List<Map<String, dynamic>> _addresses = [];
   Map<String, dynamic>? _selectedAddress;
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
@@ -107,9 +120,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 Text('Kupon u aplikua! Zbritje: ${_discount.toStringAsFixed(2)} L'),
               ],
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: forestMid,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -176,9 +189,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 Text('Porosia u krijua me sukses!'),
               ],
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: forestMid,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -192,23 +205,33 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: creamBg,
       appBar: AppBar(
-        title: const Text('Checkout'),
-        backgroundColor: const Color(0xFF16a34a),
+        title: Text(
+          'Porosi e Re',
+          style: GoogleFonts.playfairDisplay(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: forestMid,
         foregroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Address Selection Section
-              _buildSectionHeader(
-                'Adresa e Dorëzimit',
-                Icons.location_on,
+              // Section 1: Address
+              _buildSectionCard(
+                number: '1',
+                title: 'Adresa e Dorëzimit',
+                icon: Icons.location_on_outlined,
                 action: TextButton.icon(
                   onPressed: () async {
                     final result = await Navigator.of(context).push(
@@ -220,49 +243,145 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       _loadAddresses();
                     }
                   },
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text('Shto'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: const Color(0xFF16a34a),
+                  icon: const Icon(Icons.add, size: 16, color: forestMid),
+                  label: Text('Shto', style: GoogleFonts.nunito(color: forestMid, fontWeight: FontWeight.bold)),
+                ),
+                child: _loadingAddresses
+                    ? const Center(child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: CircularProgressIndicator(color: forestMid),
+                      ))
+                    : _addresses.isEmpty
+                        ? _buildEmptyAddressCard()
+                        : Column(
+                            children: _addresses.map((addr) => _buildAddressCard(addr)).toList(),
+                          ),
+              ),
+              const SizedBox(height: 16),
+
+              // Section 2: Coupon
+              _buildSectionCard(
+                number: '2',
+                title: 'Kupon Zbritjeje',
+                icon: Icons.local_offer_outlined,
+                child: _buildCouponSection(),
+              ),
+              const SizedBox(height: 16),
+
+              // Section 3: Delivery Date & Time
+              _buildSectionCard(
+                number: '3',
+                title: 'Data & Ora e Dorëzimit',
+                icon: Icons.calendar_today_outlined,
+                child: _buildDeliverySection(),
+              ),
+              const SizedBox(height: 16),
+
+              // Section 4: Notes
+              _buildSectionCard(
+                number: '4',
+                title: 'Shënime',
+                icon: Icons.note_outlined,
+                child: TextFormField(
+                  controller: _notesController,
+                  decoration: InputDecoration(
+                    hintText: 'Shënime për dorëzimin...',
+                    hintStyle: GoogleFonts.nunito(color: textMuted, fontSize: 14),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: earthLight),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: earthLight),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: forestMid, width: 2),
+                    ),
+                    contentPadding: const EdgeInsets.all(16),
                   ),
+                  maxLines: 3,
+                  style: GoogleFonts.nunito(color: textDark),
                 ),
               ),
-              const SizedBox(height: 12),
-              if (_loadingAddresses)
-                const Center(child: CircularProgressIndicator())
-              else if (_addresses.isEmpty)
-                _buildEmptyAddressCard()
-              else
-                ..._addresses.map((address) => _buildAddressCard(address)),
-
-              const SizedBox(height: 24),
-
-              // Coupon Section
-              _buildSectionHeader('Kupon Zbritjeje', Icons.local_offer),
-              const SizedBox(height: 12),
-              _buildCouponSection(),
-
-              const SizedBox(height: 24),
-
-              // Delivery Section
-              _buildSectionHeader('Dorëzimi', Icons.delivery_dining),
-              const SizedBox(height: 12),
-              _buildDeliverySection(),
 
               if (_error != null) ...[
                 const SizedBox(height: 16),
-                _buildErrorCard(_error!),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFEE2E2),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFFCA5A5)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error_outline, color: Color(0xFFDC2626), size: 20),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          _error!,
+                          style: GoogleFonts.nunito(color: const Color(0xFFDC2626), fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // Summary Section
+              // Order Summary
               _buildSummarySection(),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
               // Submit Button
-              _buildSubmitButton(),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _submitting || _selectedAddress == null ? null : _submit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: honeyMid,
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor: earthLight,
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    elevation: 2,
+                  ),
+                  child: _submitting
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text('Duke krijuar porosinë...',
+                                style: GoogleFonts.nunito(fontWeight: FontWeight.bold, fontSize: 16)),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.eco_outlined, size: 20),
+                            const SizedBox(width: 8),
+                            Text('Porosit Tani',
+                                style: GoogleFonts.nunito(fontWeight: FontWeight.bold, fontSize: 16)),
+                          ],
+                        ),
+                ),
+              ),
             ],
           ),
         ),
@@ -270,64 +389,111 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon, {Widget? action}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Icon(icon, color: const Color(0xFF16a34a), size: 24),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildSectionCard({
+    required String number,
+    required String title,
+    required IconData icon,
+    required Widget child,
+    Widget? action,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: forestMid.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: const BoxDecoration(
+                  color: forestMid,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    number,
+                    style: GoogleFonts.nunito(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
-        ),
-        if (action != null) action,
-      ],
+              const SizedBox(width: 10),
+              Icon(icon, color: forestMid, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: textDark,
+                  ),
+                ),
+              ),
+              if (action != null) action,
+            ],
+          ),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
     );
   }
 
   Widget _buildEmptyAddressCard() {
-    return Card(
-      color: Colors.orange.shade50,
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const Icon(Icons.location_off, size: 48, color: Colors.orange),
-            const SizedBox(height: 12),
-            const Text(
-              'Nuk keni adresa të ruajtura',
-              style: TextStyle(fontWeight: FontWeight.w600),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: forestGhost,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          const Icon(Icons.location_off_outlined, size: 40, color: forestMid),
+          const SizedBox(height: 12),
+          Text(
+            'Nuk keni adresa të ruajtura',
+            style: GoogleFonts.nunito(fontWeight: FontWeight.w600, color: textDark),
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: () async {
+              final result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const AddressManagementScreen(),
+                ),
+              );
+              if (result == true) {
+                _loadAddresses();
+              }
+            },
+            icon: const Icon(Icons.add, size: 18),
+            label: Text('Shto Adresë të Re',
+                style: GoogleFonts.nunito(fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: forestMid,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
-            const SizedBox(height: 8),
-            ElevatedButton.icon(
-              onPressed: () async {
-                final result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const AddressManagementScreen(),
-                  ),
-                );
-                if (result == true) {
-                  _loadAddresses();
-                }
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Shto Adresë të Re'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF16a34a),
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -336,97 +502,84 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final isSelected = _selectedAddress?['id'] == address['id'];
     final isDefault = address['is_default'] == true;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: isSelected ? 4 : 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: isSelected ? const Color(0xFF16a34a) : Colors.transparent,
-          width: 2,
+    return GestureDetector(
+      onTap: () => setState(() => _selectedAddress = address),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isSelected ? forestGhost : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? forestMid : earthLight,
+            width: isSelected ? 2 : 1,
+          ),
         ),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          setState(() => _selectedAddress = address);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? const Color(0xFF16a34a).withOpacity(0.1)
-                      : Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.home,
-                  color: isSelected ? const Color(0xFF16a34a) : Colors.grey[600],
-                ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isSelected ? forestMid : earthLight,
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
+              child: Icon(
+                Icons.home_outlined,
+                color: isSelected ? Colors.white : textMuted,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          address['street'] ?? '',
+                          style: GoogleFonts.nunito(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: isSelected ? forestDark : textDark,
+                          ),
+                        ),
+                      ),
+                      if (isDefault)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: forestMid,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
                           child: Text(
-                            address['street'] ?? '',
-                            style: TextStyle(
+                            'Default',
+                            style: GoogleFonts.nunito(
+                              color: Colors.white,
+                              fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: isSelected ? const Color(0xFF16a34a) : null,
                             ),
                           ),
                         ),
-                        if (isDefault)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Text(
-                              'DEFAULT',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${address['city'] ?? ''}${address['postal_code'] != null ? ', ${address['postal_code']}' : ''}',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${address['city'] ?? ''}${address['postal_code'] != null ? ', ${address['postal_code']}' : ''}',
+                    style: GoogleFonts.nunito(color: textMuted, fontSize: 12),
+                  ),
+                ],
               ),
-              Radio<Map<String, dynamic>>(
-                value: address,
-                groupValue: _selectedAddress,
-                onChanged: (value) {
-                  setState(() => _selectedAddress = value);
-                },
-                activeColor: const Color(0xFF16a34a),
-              ),
-            ],
-          ),
+            ),
+            Radio<Map<String, dynamic>>(
+              value: address,
+              groupValue: _selectedAddress,
+              onChanged: (value) => setState(() => _selectedAddress = value),
+              activeColor: forestMid,
+            ),
+          ],
         ),
       ),
     );
@@ -434,50 +587,41 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildCouponSection() {
     if (_appliedCoupon != null) {
-      return Card(
-        color: Colors.green.shade50,
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.check_circle, color: Colors.green, size: 20),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Kupon: ${_appliedCoupon!['coupon']?['code']}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+      return Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: forestGhost,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: forestMid, width: 1),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.check_circle, color: forestMid, size: 20),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Kupon: ${_appliedCoupon!['coupon']?['code']}',
+                    style: GoogleFonts.nunito(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: textDark,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Zbritje: ${_discount.toStringAsFixed(2)} L',
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    'Zbritje: ${_discount.toStringAsFixed(2)} L',
+                    style: GoogleFonts.nunito(color: forestMid, fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: _removeCoupon,
-                color: Colors.red,
-              ),
-            ],
-          ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, color: Color(0xFFDC2626)),
+              onPressed: _removeCoupon,
+            ),
+          ],
         ),
       );
     }
@@ -488,28 +632,39 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: TextFormField(
             controller: _couponController,
             decoration: InputDecoration(
-              labelText: 'Kodi i kuponit',
-              hintText: 'Shkruani kodin',
-              prefixIcon: const Icon(Icons.local_offer),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              hintText: 'Kodi i kuponit',
+              hintStyle: GoogleFonts.nunito(color: textMuted, fontSize: 14),
+              prefixIcon: const Icon(Icons.local_offer_outlined, color: forestMid),
               filled: true,
-              fillColor: Colors.grey[50],
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: earthLight),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: earthLight),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: forestMid, width: 2),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
             textCapitalization: TextCapitalization.characters,
             onFieldSubmitted: (_) => _applyCoupon(),
+            style: GoogleFonts.nunito(color: textDark),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 10),
         ElevatedButton(
           onPressed: _applyingCoupon ? null : _applyCoupon,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF16a34a),
+            backgroundColor: forestMid,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
             ),
           ),
           child: _applyingCoupon
@@ -521,245 +676,192 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
-              : const Text('Apliko'),
+              : Text('Apliko', style: GoogleFonts.nunito(fontWeight: FontWeight.bold)),
         ),
       ],
     );
   }
 
   Widget _buildDeliverySection() {
+    final timeSlots = ['10:00-14:00', '14:00-18:00', '18:00-22:00'];
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Date Picker
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: ListTile(
-            leading: const Icon(Icons.calendar_today, color: Color(0xFF16a34a)),
-            title: const Text('Data e Dorëzimit'),
-            subtitle: Text(
-              '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-              style: const TextStyle(fontWeight: FontWeight.w600),
+        GestureDetector(
+          onTap: () async {
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: _selectedDate,
+              firstDate: DateTime.now().add(const Duration(days: 1)),
+              lastDate: DateTime.now().add(const Duration(days: 30)),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: const ColorScheme.light(primary: forestMid),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+            if (picked != null) setState(() => _selectedDate = picked);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: earthLight),
             ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () async {
-              final picked = await showDatePicker(
-                context: context,
-                initialDate: _selectedDate,
-                firstDate: DateTime.now().add(const Duration(days: 1)),
-                lastDate: DateTime.now().add(const Duration(days: 30)),
-                builder: (context, child) {
-                  return Theme(
-                    data: Theme.of(context).copyWith(
-                      colorScheme: const ColorScheme.light(
-                        primary: Color(0xFF16a34a),
+            child: Row(
+              children: [
+                const Icon(Icons.calendar_today_outlined, color: forestMid, size: 20),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Data e Dorëzimit',
+                          style: GoogleFonts.nunito(color: textMuted, fontSize: 12)),
+                      Text(
+                        '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                        style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.bold,
+                          color: textDark,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    child: child!,
-                  );
-                },
-              );
-              if (picked != null) {
-                setState(() => _selectedDate = picked);
-              }
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
-        // Time Slot
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: DropdownButtonFormField<String>(
-              initialValue: _timeSlot,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                labelText: 'Orari i Dorëzimit',
-                prefixIcon: Icon(Icons.access_time, color: Color(0xFF16a34a)),
-              ),
-              items: const [
-                DropdownMenuItem(
-                  value: '10:00-14:00',
-                  child: Row(
-                    children: [
-                      Icon(Icons.wb_sunny, size: 18),
-                      SizedBox(width: 8),
-                      Text('10:00 - 14:00'),
                     ],
                   ),
                 ),
-                DropdownMenuItem(
-                  value: '14:00-18:00',
-                  child: Row(
-                    children: [
-                      Icon(Icons.wb_twilight, size: 18),
-                      SizedBox(width: 8),
-                      Text('14:00 - 18:00'),
-                    ],
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: '18:00-22:00',
-                  child: Row(
-                    children: [
-                      Icon(Icons.nightlight, size: 18),
-                      SizedBox(width: 8),
-                      Text('18:00 - 22:00'),
-                    ],
-                  ),
-                ),
+                const Icon(Icons.chevron_right, color: textMuted),
               ],
-              onChanged: (value) => setState(() => _timeSlot = value!),
             ),
           ),
         ),
         const SizedBox(height: 12),
-        // Notes
-        TextFormField(
-          controller: _notesController,
-          decoration: InputDecoration(
-            labelText: 'Shënime (opsionale)',
-            hintText: 'Shënime për dorëzimin...',
-            prefixIcon: const Icon(Icons.note),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            filled: true,
-            fillColor: Colors.grey[50],
-          ),
-          maxLines: 3,
+        Text('Orari i Dorëzimit',
+            style: GoogleFonts.nunito(color: textMuted, fontSize: 13, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: timeSlots.map((slot) {
+            final isSelected = _timeSlot == slot;
+            return GestureDetector(
+              onTap: () => setState(() => _timeSlot = slot),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isSelected ? forestMid : Colors.white,
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(
+                    color: isSelected ? forestMid : earthLight,
+                    width: isSelected ? 2 : 1,
+                  ),
+                ),
+                child: Text(
+                  slot,
+                  style: GoogleFonts.nunito(
+                    color: isSelected ? Colors.white : textDark,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
   }
 
-  Widget _buildErrorCard(String error) {
+  Widget _buildSummarySection() {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.red.shade50,
-        border: Border.all(color: Colors.red.shade300),
-        borderRadius: BorderRadius.circular(12),
+        color: forestGhost,
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.error_outline, color: Colors.red.shade700),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              error,
-              style: TextStyle(color: Colors.red.shade700),
+          Row(
+            children: [
+              const Icon(Icons.receipt_long_outlined, color: forestMid, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Përmbledhja e Porosisë',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _summaryRow('Nëntotali', widget.cart.subtotal),
+          _summaryRow('Dërgesa', widget.cart.deliveryFee),
+          if (_discount > 0)
+            _summaryRowColored('Zbritje', -_discount, const Color(0xFF16A34A)),
+          Divider(color: forestPale, thickness: 1, height: 20),
+          _summaryRow('Totali', _finalTotal, bold: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryRow(String label, double value, {bool bold = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.nunito(
+              fontSize: bold ? 16 : 14,
+              color: bold ? textDark : textMuted,
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
             ),
+          ),
+          Text(
+            '${value.toStringAsFixed(2)} L',
+            style: bold
+                ? GoogleFonts.playfairDisplay(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: forestMid)
+                : GoogleFonts.nunito(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: textDark),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSummarySection() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.receipt, color: Color(0xFF16a34a)),
-                const SizedBox(width: 8),
-                const Text(
-                  'Përmbledhje',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const Divider(height: 24),
-            _summaryRow('Nëntotali', widget.cart.subtotal),
-            _summaryRow('Dërgesa', widget.cart.deliveryFee),
-            if (_discount > 0)
-              _summaryRow('Zbritje', -_discount, color: Colors.green, icon: Icons.local_offer),
-            const Divider(height: 24),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF16a34a).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: _summaryRow('Totali', _finalTotal, bold: true),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _summaryRow(String label, double value, {bool bold = false, Color? color, IconData? icon}) {
+  Widget _summaryRowColored(String label, double value, Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              if (icon != null) ...[
-                Icon(icon, size: 18, color: color ?? Colors.grey[600]),
-                const SizedBox(width: 8),
-              ],
-              Text(
-                label,
-                style: TextStyle(
-                  fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                  fontSize: bold ? 16 : 14,
-                  color: color ?? Colors.grey[700],
-                ),
-              ),
+              Icon(Icons.local_offer_outlined, size: 14, color: color),
+              const SizedBox(width: 6),
+              Text(label, style: GoogleFonts.nunito(fontSize: 14, color: color, fontWeight: FontWeight.w600)),
             ],
           ),
           Text(
             '${value >= 0 ? '' : '-'}${value.abs().toStringAsFixed(2)} L',
-            style: TextStyle(
-              fontWeight: bold ? FontWeight.bold : FontWeight.w600,
-              fontSize: bold ? 20 : 14,
-              color: color ?? (bold ? const Color(0xFF16a34a) : Colors.black87),
-            ),
+            style: GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.bold, color: color),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSubmitButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: _submitting || _selectedAddress == null ? null : _submit,
-        icon: _submitting
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            : const Icon(Icons.check_circle),
-        label: Text(_submitting ? 'Duke krijuar porosinë...' : 'Konfirmo Porosinë'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF16a34a),
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 2,
-        ),
       ),
     );
   }

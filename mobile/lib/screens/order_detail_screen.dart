@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
+
+const Color forestDark  = Color(0xFF1B4332);
+const Color forestMid   = Color(0xFF2D6A4F);
+const Color forestLight = Color(0xFF40916C);
+const Color forestPale  = Color(0xFF52B788);
+const Color forestGhost = Color(0xFFD8F3DC);
+const Color honeyDark   = Color(0xFFE76F51);
+const Color honeyMid    = Color(0xFFF4A261);
+const Color creamBg     = Color(0xFFFEFAE0);
+const Color earthLight  = Color(0xFFE8D5C4);
+const Color textDark    = Color(0xFF1B2F1E);
+const Color textMuted   = Color(0xFF6B7C73);
 
 class OrderDetailScreen extends StatefulWidget {
   final String orderId;
@@ -48,28 +61,46 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Row(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
-            SizedBox(width: 8),
-            Text('Anulo Porosi'),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEE2E2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.warning_amber_rounded,
+                  color: Color(0xFFDC2626), size: 24),
+            ),
+            const SizedBox(width: 12),
+            Text('Anulo Porosi',
+                style: GoogleFonts.playfairDisplay(
+                    fontWeight: FontWeight.bold, color: textDark)),
           ],
         ),
-        content: const Text('Jeni të sigurt që dëshironi të anuloni këtë porosi? Kjo veprim nuk mund të zhbëhet.'),
+        content: Text(
+          'Jeni të sigurt që dëshironi të anuloni këtë porosi? Kjo veprim nuk mund të zhbëhet.',
+          style: GoogleFonts.nunito(color: textMuted),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Anulo'),
+            child: Text('Jo',
+                style: GoogleFonts.nunito(
+                    color: textMuted, fontWeight: FontWeight.bold)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: const Color(0xFFDC2626),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)),
             ),
-            child: const Text('Anulo Porosinë'),
+            child: Text('Anulo Porosinë',
+                style: GoogleFonts.nunito(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -87,16 +118,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Row(
+            content: Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Porosia u anulua me sukses'),
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 8),
+                Text('Porosia u anulua me sukses',
+                    style: GoogleFonts.nunito(color: Colors.white)),
               ],
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: forestMid,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -108,12 +141,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               children: [
                 const Icon(Icons.error, color: Colors.white),
                 const SizedBox(width: 8),
-                Expanded(child: Text('Gabim: $e')),
+                Expanded(
+                    child: Text('Gabim: $e',
+                        style: GoogleFonts.nunito(color: Colors.white))),
               ],
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: const Color(0xFFDC2626),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -134,18 +170,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Color _statusColor(String status) {
     switch (status) {
       case 'pending':
-        return Colors.orange;
+        return const Color(0xFFF59E0B);
       case 'confirmed':
+        return const Color(0xFF3B82F6);
       case 'preparing':
-        return Colors.blue;
+        return const Color(0xFFF97316);
       case 'on_delivery':
-        return Colors.purple;
+        return const Color(0xFF8B5CF6);
       case 'delivered':
-        return Colors.green;
+        return forestMid;
       case 'cancelled':
-        return Colors.red;
+        return const Color(0xFFDC2626);
       default:
-        return Colors.grey;
+        return textMuted;
     }
   }
 
@@ -187,98 +224,119 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
   }
 
+  Widget _statusChip(String status, String label) {
+    final map = {
+      'pending':     [const Color(0xFFFEF3C7), const Color(0xFF92400E)],
+      'confirmed':   [const Color(0xFFDBEAFE), const Color(0xFF1E40AF)],
+      'preparing':   [const Color(0xFFFFEDD5), const Color(0xFF9A3412)],
+      'on_delivery': [const Color(0xFFF3E8FF), const Color(0xFF6B21A8)],
+      'delivered':   [const Color(0xFFD8F3DC), const Color(0xFF1B4332)],
+      'cancelled':   [const Color(0xFFFEE2E2), const Color(0xFF991B1B)],
+    };
+    final colors = map[status] ?? [const Color(0xFFF3F4F6), const Color(0xFF374151)];
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+          color: colors[0],
+          borderRadius: BorderRadius.circular(50)),
+      child: Text(label,
+          style: TextStyle(
+              color: colors[1], fontSize: 11, fontWeight: FontWeight.bold)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: creamBg,
       appBar: AppBar(
-        title: Text('Porosia #${_order?['order_number'] ?? ''}'),
-        backgroundColor: const Color(0xFF16a34a),
+        title: Text(
+          'Porosia #${_order?['order_number'] ?? ''}',
+          style: GoogleFonts.playfairDisplay(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: forestMid,
         foregroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
       ),
       body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF16a34a)),
-              ),
-            )
+          ? const Center(child: CircularProgressIndicator(color: forestMid))
           : _error != null
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Text(
-                          _error!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 16, color: Colors.red),
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.error_outline,
+                            size: 56, color: Color(0xFFDC2626)),
+                        const SizedBox(height: 16),
+                        Text(_error!,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.nunito(color: textMuted)),
+                        const SizedBox(height: 24),
+                        ElevatedButton.icon(
+                          onPressed: _loadOrderDetails,
+                          icon: const Icon(Icons.refresh),
+                          label: Text('Provo përsëri',
+                              style: GoogleFonts.nunito(
+                                  fontWeight: FontWeight.bold)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: forestMid,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      ElevatedButton.icon(
-                        onPressed: _loadOrderDetails,
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Provo përsëri'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF16a34a),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 )
               : _order == null
-                  ? const Center(
+                  ? Center(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.inbox_outlined, size: 64, color: Colors.grey),
-                          SizedBox(height: 16),
-                          Text('Porosia nuk u gjet'),
+                          const Icon(Icons.inbox_outlined,
+                              size: 56, color: textMuted),
+                          const SizedBox(height: 16),
+                          Text('Porosia nuk u gjet',
+                              style: GoogleFonts.nunito(color: textMuted)),
                         ],
                       ),
                     )
                   : RefreshIndicator(
                       onRefresh: _loadOrderDetails,
-                      color: const Color(0xFF16a34a),
+                      color: forestMid,
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.all(16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Status Card - Enhanced
                             _buildStatusCard(),
-                            const SizedBox(height: 20),
-
-                            // Order Info Card
+                            const SizedBox(height: 16),
                             _buildOrderInfoCard(),
-                            const SizedBox(height: 20),
-
-                            // Products Section
+                            const SizedBox(height: 16),
                             _buildProductsSection(),
-                            const SizedBox(height: 20),
-
-                            // Address Section
+                            const SizedBox(height: 16),
                             _buildAddressSection(),
-                            const SizedBox(height: 20),
-
-                            // Summary Section
+                            const SizedBox(height: 16),
                             _buildSummarySection(),
-                            const SizedBox(height: 20),
-
-                            // Notes Section (if exists)
-                            if (_order!['notes'] != null && _order!['notes'].toString().isNotEmpty)
+                            if (_order!['notes'] != null &&
+                                _order!['notes'].toString().isNotEmpty) ...[
+                              const SizedBox(height: 16),
                               _buildNotesSection(),
-
-                            const SizedBox(height: 20),
-
-                            // Cancel Button (only if pending or confirmed)
-                            if (_order!['status'] == 'pending' || _order!['status'] == 'confirmed')
+                            ],
+                            if (_order!['status'] == 'pending' ||
+                                _order!['status'] == 'confirmed') ...[
+                              const SizedBox(height: 20),
                               _buildCancelButton(),
+                            ],
+                            const SizedBox(height: 32),
                           ],
                         ),
                       ),
@@ -289,34 +347,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget _buildStatusCard() {
     final status = _order!['status'];
     final statusColor = _statusColor(status);
-    
+
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            statusColor.withOpacity(0.1),
-            statusColor.withOpacity(0.05),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: statusColor.withOpacity(0.3), width: 2),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: forestMid.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       padding: const EdgeInsets.all(20),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.2),
+              color: statusColor.withOpacity(0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              _statusIcon(status),
-              color: statusColor,
-              size: 32,
-            ),
+            child: Icon(_statusIcon(status), color: statusColor, size: 28),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -325,33 +378,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               children: [
                 Text(
                   'Statusi i Porosisë',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: GoogleFonts.nunito(
+                      fontSize: 12, color: textMuted, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _statusText(status),
-                  style: TextStyle(
+                  style: GoogleFonts.playfairDisplay(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: statusColor,
                   ),
                 ),
                 if (_order!['created_at'] != null) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 14, color: Colors.grey[600]),
+                      Icon(Icons.access_time_outlined,
+                          size: 13, color: textMuted),
                       const SizedBox(width: 4),
                       Text(
                         _formatDateTime(_order!['created_at']),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style:
+                            GoogleFonts.nunito(fontSize: 12, color: textMuted),
                       ),
                     ],
                   ),
@@ -359,58 +408,43 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ],
             ),
           ),
+          _statusChip(status, _statusText(status)),
         ],
       ),
     );
   }
 
   Widget _buildOrderInfoCard() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.receipt_long, color: Color(0xFF16a34a)),
-                const SizedBox(width: 8),
-                const Text(
-                  'Informacione të Porosisë',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const Divider(height: 24),
-            _buildInfoRow('Numri i Porosisë', '#${_order!['order_number']}'),
-            if (_order!['payment_method'] != null)
-              _buildInfoRow('Metoda e Pagesës', _order!['payment_method'] == 'cod' ? 'Cash on Delivery' : 'Online'),
-            if (_order!['delivery_date'] != null)
-              _buildInfoRow('Data e Dorëzimit', _order!['delivery_date']),
-            if (_order!['delivery_time_slot'] != null)
-              _buildInfoRow('Orari i Dorëzimit', _order!['delivery_time_slot']),
-          ],
-        ),
+    return _warmCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionLabel('Informacione të Porosisë'),
+          const SizedBox(height: 14),
+          _infoRow('Numri i Porosisë', '#${_order!['order_number']}'),
+          if (_order!['payment_method'] != null)
+            _infoRow('Metoda e Pagesës',
+                _order!['payment_method'] == 'cod' ? 'Cash on Delivery' : 'Online'),
+          if (_order!['delivery_date'] != null)
+            _infoRow('Data e Dorëzimit', _order!['delivery_date']),
+          if (_order!['delivery_time_slot'] != null)
+            _infoRow('Orari i Dorëzimit', _order!['delivery_time_slot']),
+        ],
       ),
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _infoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(color: Colors.grey[600], fontSize: 14),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-          ),
+          Text(label,
+              style: GoogleFonts.nunito(color: textMuted, fontSize: 13)),
+          Text(value,
+              style: GoogleFonts.nunito(
+                  fontWeight: FontWeight.w600, fontSize: 13, color: textDark)),
         ],
       ),
     );
@@ -418,274 +452,245 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   Widget _buildProductsSection() {
     final items = (_order!['items'] as List?) ?? [];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            const Icon(Icons.shopping_bag, color: Color(0xFF16a34a), size: 24),
-            const SizedBox(width: 8),
-            const Text(
-              'Produktet',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            _sectionLabel('Produktet'),
             const Spacer(),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: const Color(0xFF16a34a).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
+                color: forestGhost,
+                borderRadius: BorderRadius.circular(50),
               ),
               child: Text(
-                '${items.length} ${items.length == 1 ? 'produkt' : 'produkte'}',
-                style: const TextStyle(
-                  color: Color(0xFF16a34a),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                ),
+                '${items.length} produkte',
+                style: GoogleFonts.nunito(
+                    color: forestMid,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
               ),
             ),
           ],
         ),
         const SizedBox(height: 12),
-        ...items.map((item) {
-          final product = item['product'] ?? {};
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            elevation: 1,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  // Product Image
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: (product['image_urls'] as List?)?.isNotEmpty == true
-                        ? Image.network(
-                            product['image_urls'][0],
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
-                                  width: 60,
-                                  height: 60,
-                                  color: Colors.grey[200],
-                                  child: const Icon(Icons.image, color: Colors.grey),
-                                ),
-                          )
-                        : Container(
-                            width: 60,
-                            height: 60,
-                            color: Colors.grey[200],
-                            child: const Icon(Icons.image, color: Colors.grey),
-                          ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Product Info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          product['name'] ?? 'Produkt',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${item['quantity']} x ${item['unit_price']} L / ${product['unit'] ?? ''}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Total Price
-                  Text(
-                    '${item['total_price']} L',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Color(0xFF16a34a),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }),
+        ...items.map((item) => _buildItemCard(item)),
       ],
     );
   }
 
-  Widget _buildAddressSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Icon(Icons.location_on, color: Color(0xFF16a34a), size: 24),
-            const SizedBox(width: 8),
-            const Text(
-              'Adresa e Dorëzimit',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
+  Widget _buildItemCard(Map<String, dynamic> item) {
+    final product = item['product'] ?? {};
+    final imageUrls = product['image_urls'] as List?;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: forestMid.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: imageUrls?.isNotEmpty == true
+                ? Image.network(
+                    imageUrls![0],
+                    width: 62,
+                    height: 62,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => _imagePlaceholder(),
+                  )
+                : _imagePlaceholder(),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (_order!['address'] != null) ...[
-                  Row(
-                    children: [
-                      const Icon(Icons.home, size: 20, color: Color(0xFF16a34a)),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          _order!['address']['street'] ?? '',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_city, size: 20, color: Colors.grey),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${_order!['address']['city'] ?? ''}${_order!['address']['postal_code'] != null ? ', ${_order!['address']['postal_code']}' : ''}',
-                        style: TextStyle(color: Colors.grey[700], fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ],
-                if (_order!['delivery_date'] != null || _order!['delivery_time_slot'] != null) ...[
-                  const Divider(height: 24),
-                  if (_order!['delivery_date'] != null)
-                    _buildDeliveryInfo('Data', _order!['delivery_date']),
-                  if (_order!['delivery_time_slot'] != null)
-                    _buildDeliveryInfo('Orari', _order!['delivery_time_slot']),
-                ],
+                Text(
+                  product['name'] ?? 'Produkt',
+                  style: GoogleFonts.nunito(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: textDark),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${item['quantity']} x ${item['unit_price']} L / ${product['unit'] ?? ''}',
+                  style: GoogleFonts.nunito(color: textMuted, fontSize: 12),
+                ),
               ],
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDeliveryInfo(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Icon(
-            label == 'Data' ? Icons.calendar_today : Icons.access_time,
-            size: 16,
-            color: Colors.grey[600],
-          ),
-          const SizedBox(width: 8),
           Text(
-            '$label: ',
-            style: TextStyle(color: Colors.grey[600], fontSize: 14),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            '${item['total_price']} L',
+            style: GoogleFonts.playfairDisplay(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: forestMid,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSummarySection() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+  Widget _imagePlaceholder() {
+    return Container(
+      width: 62,
+      height: 62,
+      decoration: BoxDecoration(
+          color: forestGhost, borderRadius: BorderRadius.circular(10)),
+      child: const Icon(Icons.eco_outlined, color: forestMid, size: 28),
+    );
+  }
+
+  Widget _buildAddressSection() {
+    return _warmCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionLabel('Adresa e Dorëzimit'),
+          const SizedBox(height: 14),
+          if (_order!['address'] != null) ...[
             Row(
               children: [
-                const Icon(Icons.receipt, color: Color(0xFF16a34a)),
-                const SizedBox(width: 8),
-                const Text(
-                  'Përmbledhje',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: forestGhost,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.home_outlined,
+                      size: 18, color: forestMid),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _order!['address']['street'] ?? '',
+                        style: GoogleFonts.nunito(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: textDark),
+                      ),
+                      Text(
+                        '${_order!['address']['city'] ?? ''}${_order!['address']['postal_code'] != null ? ', ${_order!['address']['postal_code']}' : ''}',
+                        style:
+                            GoogleFonts.nunito(color: textMuted, fontSize: 13),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            const Divider(height: 24),
-            _summaryRow('Nëntotali', _order!['subtotal']?.toDouble() ?? 0.0),
-            _summaryRow('Dërgesa', _order!['delivery_fee']?.toDouble() ?? 0.0),
-            if ((_order!['discount_amount']?.toDouble() ?? 0.0) > 0)
-              _summaryRow('Zbritje', -(_order!['discount_amount']?.toDouble() ?? 0.0),
-                  color: Colors.green, icon: Icons.local_offer),
-            const Divider(height: 24),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF16a34a).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: _summaryRow('Totali', _order!['total']?.toDouble() ?? 0.0, bold: true),
-            ),
           ],
-        ),
+          if (_order!['delivery_date'] != null ||
+              _order!['delivery_time_slot'] != null) ...[
+            const SizedBox(height: 12),
+            Divider(color: earthLight, thickness: 1, height: 1),
+            const SizedBox(height: 12),
+            if (_order!['delivery_date'] != null)
+              _infoRow('Data', _order!['delivery_date']),
+            if (_order!['delivery_time_slot'] != null)
+              _infoRow('Orari', _order!['delivery_time_slot']),
+          ],
+        ],
       ),
     );
   }
 
-  Widget _summaryRow(String label, double value, {bool bold = false, Color? color, IconData? icon}) {
+  Widget _buildSummarySection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: forestGhost,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionLabel('Përmbledhja Financiare'),
+          const SizedBox(height: 14),
+          _summaryRow('Nëntotali', _order!['subtotal']?.toDouble() ?? 0.0),
+          _summaryRow('Dërgesa', _order!['delivery_fee']?.toDouble() ?? 0.0),
+          if ((_order!['discount_amount']?.toDouble() ?? 0.0) > 0)
+            _summaryRowColored(
+                'Zbritje', -(_order!['discount_amount']?.toDouble() ?? 0.0)),
+          Divider(color: forestPale, thickness: 1, height: 20),
+          _summaryRow('Totali', _order!['total']?.toDouble() ?? 0.0, bold: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryRow(String label, double value, {bool bold = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.nunito(
+              fontSize: bold ? 16 : 14,
+              color: bold ? textDark : textMuted,
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            '${value.toStringAsFixed(2)} L',
+            style: bold
+                ? GoogleFonts.playfairDisplay(
+                    fontSize: 20, fontWeight: FontWeight.bold, color: forestMid)
+                : GoogleFonts.nunito(
+                    fontSize: 14, fontWeight: FontWeight.w600, color: textDark),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryRowColored(String label, double value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              if (icon != null) ...[
-                Icon(icon, size: 18, color: color ?? Colors.grey[600]),
-                const SizedBox(width: 8),
-              ],
-              Text(
-                label,
-                style: TextStyle(
-                  fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                  fontSize: bold ? 16 : 14,
-                  color: color ?? Colors.grey[700],
-                ),
-              ),
+              const Icon(Icons.local_offer_outlined,
+                  size: 14, color: forestLight),
+              const SizedBox(width: 6),
+              Text(label,
+                  style: GoogleFonts.nunito(
+                      fontSize: 14,
+                      color: forestLight,
+                      fontWeight: FontWeight.w600)),
             ],
           ),
           Text(
             '${value >= 0 ? '' : '-'}${value.abs().toStringAsFixed(2)} L',
-            style: TextStyle(
-              fontWeight: bold ? FontWeight.bold : FontWeight.w600,
-              fontSize: bold ? 20 : 14,
-              color: color ?? (bold ? const Color(0xFF16a34a) : Colors.black87),
-            ),
+            style: GoogleFonts.nunito(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: forestLight),
           ),
         ],
       ),
@@ -693,39 +698,25 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   }
 
   Widget _buildNotesSection() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.note, color: Color(0xFF16a34a)),
-                const SizedBox(width: 8),
-                const Text(
-                  'Shënime',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
+    return _warmCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionLabel('Shënime'),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: creamBg,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: earthLight),
             ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[200]!),
-              ),
-              child: Text(
-                _order!['notes'],
-                style: TextStyle(color: Colors.grey[800], fontSize: 14),
-              ),
+            child: Text(
+              _order!['notes'],
+              style: GoogleFonts.nunito(color: textDark, fontSize: 14),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -733,27 +724,56 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   Widget _buildCancelButton() {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton.icon(
+      child: OutlinedButton.icon(
         onPressed: _cancelling ? null : _cancelOrder,
         icon: _cancelling
             ? const SizedBox(
-                width: 20,
-                height: 20,
+                width: 18,
+                height: 18,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Color(0xFFDC2626)),
                 ),
               )
             : const Icon(Icons.cancel_outlined),
-        label: Text(_cancelling ? 'Duke anuluar...' : 'Anulo Porosinë'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
+        label: Text(_cancelling ? 'Duke anuluar...' : 'Anulo Porosinë',
+            style: GoogleFonts.nunito(fontWeight: FontWeight.bold, fontSize: 15)),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: const Color(0xFFDC2626),
+          side: const BorderSide(color: Color(0xFFDC2626), width: 1.5),
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          elevation: 2,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50)),
         ),
       ),
+    );
+  }
+
+  Widget _warmCard({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: forestMid.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+
+  Widget _sectionLabel(String text) {
+    return Text(
+      text,
+      style: GoogleFonts.playfairDisplay(
+          fontSize: 16, fontWeight: FontWeight.bold, color: textDark),
     );
   }
 }

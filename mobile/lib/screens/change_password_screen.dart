@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
+
+const Color forestDark  = Color(0xFF1B4332);
+const Color forestMid   = Color(0xFF2D6A4F);
+const Color forestLight = Color(0xFF40916C);
+const Color forestPale  = Color(0xFF52B788);
+const Color forestGhost = Color(0xFFD8F3DC);
+const Color honeyDark   = Color(0xFFE76F51);
+const Color honeyMid    = Color(0xFFF4A261);
+const Color creamBg     = Color(0xFFFEFAE0);
+const Color earthLight  = Color(0xFFE8D5C4);
+const Color textDark    = Color(0xFF1B2F1E);
+const Color textMuted   = Color(0xFF6B7C73);
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -57,16 +70,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Row(
+            content: Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Fjalëkalimi u ndryshua me sukses'),
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 8),
+                Text('Fjalëkalimi u ndryshua me sukses',
+                    style: GoogleFonts.nunito(color: Colors.white)),
               ],
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: forestMid,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -77,233 +92,320 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
   }
 
+  // Compute password strength 0-3
+  int _passwordStrength(String password) {
+    if (password.isEmpty) return 0;
+    int score = 0;
+    if (password.length >= 6) score++;
+    if (password.length >= 10) score++;
+    if (RegExp(r'[0-9]').hasMatch(password) &&
+        RegExp(r'[A-Z]').hasMatch(password)) score++;
+    return score;
+  }
+
+  Color _strengthColor(int strength) {
+    if (strength == 0) return earthLight;
+    if (strength == 1) return const Color(0xFFDC2626);
+    if (strength == 2) return honeyMid;
+    return forestMid;
+  }
+
+  String _strengthLabel(int strength) {
+    if (strength == 0) return '';
+    if (strength == 1) return 'E dobët';
+    if (strength == 2) return 'E mesme';
+    return 'E fortë';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final newPassword = _newPasswordController.text;
+    final strength = _passwordStrength(newPassword);
+
     return Scaffold(
+      backgroundColor: creamBg,
       appBar: AppBar(
-        title: const Text('Ndrysho Fjalëkalimin'),
-        backgroundColor: const Color(0xFF16a34a),
+        title: Text(
+          'Ndrysho Fjalëkalimin',
+          style: GoogleFonts.playfairDisplay(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: forestMid,
         foregroundColor: Colors.white,
         elevation: 0,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Security Icon
+              const SizedBox(height: 8),
+
+              // Lock icon header
               Center(
                 child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF16a34a).withOpacity(0.1),
+                  padding: const EdgeInsets.all(24),
+                  decoration: const BoxDecoration(
+                    color: forestGhost,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.lock,
-                    size: 64,
-                    color: Color(0xFF16a34a),
-                  ),
+                  child: const Icon(Icons.lock_outline,
+                      size: 48, color: forestMid),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
 
-              // Old Password Field
-              TextFormField(
+              // Old password
+              _buildPasswordField(
                 controller: _oldPasswordController,
-                decoration: InputDecoration(
-                  labelText: 'Fjalëkalimi Aktual *',
-                  hintText: 'Shkruani fjalëkalimin aktual',
-                  prefixIcon: const Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureOldPassword ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() => _obscureOldPassword = !_obscureOldPassword);
-                    },
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                ),
-                obscureText: _obscureOldPassword,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Ju lutem shkruani fjalëkalimin aktual';
-                  }
-                  return null;
-                },
+                label: 'Fjalëkalimi Aktual',
+                hint: 'Shkruani fjalëkalimin aktual',
+                obscure: _obscureOldPassword,
+                onToggle: () =>
+                    setState(() => _obscureOldPassword = !_obscureOldPassword),
+                validator: (v) => v == null || v.isEmpty
+                    ? 'Ju lutem shkruani fjalëkalimin aktual'
+                    : null,
               ),
               const SizedBox(height: 16),
 
-              // New Password Field
-              TextFormField(
+              // New password
+              _buildPasswordField(
                 controller: _newPasswordController,
-                decoration: InputDecoration(
-                  labelText: 'Fjalëkalimi i Ri *',
-                  hintText: 'Minimumi 6 karaktere',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureNewPassword ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() => _obscureNewPassword = !_obscureNewPassword);
-                    },
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                ),
-                obscureText: _obscureNewPassword,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
+                label: 'Fjalëkalimi i Ri',
+                hint: 'Minimumi 6 karaktere',
+                obscure: _obscureNewPassword,
+                onToggle: () =>
+                    setState(() => _obscureNewPassword = !_obscureNewPassword),
+                validator: (v) {
+                  if (v == null || v.isEmpty) {
                     return 'Ju lutem shkruani fjalëkalimin e ri';
                   }
-                  if (value.length < 6) {
+                  if (v.length < 6) {
                     return 'Fjalëkalimi duhet të jetë së paku 6 karaktere';
                   }
                   return null;
                 },
+                onChanged: (_) => setState(() {}),
               ),
+
+              // Password strength bar
+              if (newPassword.isNotEmpty) ...[
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: strength / 3,
+                          backgroundColor: earthLight,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              _strengthColor(strength)),
+                          minHeight: 6,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      _strengthLabel(strength),
+                      style: GoogleFonts.nunito(
+                        color: _strengthColor(strength),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: 16),
 
-              // Confirm Password Field
-              TextFormField(
+              // Confirm password
+              _buildPasswordField(
                 controller: _confirmPasswordController,
-                decoration: InputDecoration(
-                  labelText: 'Konfirmo Fjalëkalimin e Ri *',
-                  hintText: 'Rishkruani fjalëkalimin e ri',
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
-                    },
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[50],
-                ),
-                obscureText: _obscureConfirmPassword,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
+                label: 'Konfirmo Fjalëkalimin e Ri',
+                hint: 'Rishkruani fjalëkalimin e ri',
+                obscure: _obscureConfirmPassword,
+                onToggle: () => setState(() =>
+                    _obscureConfirmPassword = !_obscureConfirmPassword),
+                validator: (v) {
+                  if (v == null || v.isEmpty) {
                     return 'Ju lutem konfirmoni fjalëkalimin';
                   }
-                  if (value != _newPasswordController.text) {
+                  if (v != _newPasswordController.text) {
                     return 'Fjalëkalimet nuk përputhen';
                   }
                   return null;
                 },
               ),
 
-              // Error Message
+              // Error
               if (_error != null) ...[
                 const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    border: Border.all(color: Colors.red.shade300),
-                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFFFEE2E2),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFFCA5A5)),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.error_outline, color: Colors.red.shade700),
-                      const SizedBox(width: 8),
+                      const Icon(Icons.error_outline,
+                          color: Color(0xFFDC2626), size: 20),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: Text(
                           _error!,
-                          style: TextStyle(color: Colors.red.shade700),
+                          style: GoogleFonts.nunito(
+                              color: const Color(0xFFDC2626), fontSize: 13),
                         ),
                       ),
                     ],
                   ),
                 ),
               ],
+              const SizedBox(height: 28),
 
-              const SizedBox(height: 24),
-
-              // Change Password Button
+              // Save button
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton.icon(
+                child: ElevatedButton(
                   onPressed: _changing ? null : _changePassword,
-                  icon: _changing
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Icon(Icons.lock_reset),
-                  label: Text(_changing ? 'Duke ndryshuar...' : 'Ndrysho Fjalëkalimin'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF16a34a),
+                    backgroundColor: forestMid,
                     foregroundColor: Colors.white,
+                    disabledBackgroundColor: earthLight,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                        borderRadius: BorderRadius.circular(50)),
                     elevation: 2,
                   ),
+                  child: _changing
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text('Duke ndryshuar...',
+                                style: GoogleFonts.nunito(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15)),
+                          ],
+                        )
+                      : Text('Ndrysho Fjalëkalimin',
+                          style: GoogleFonts.nunito(
+                              fontWeight: FontWeight.bold, fontSize: 15)),
                 ),
               ),
+              const SizedBox(height: 20),
 
-              const SizedBox(height: 16),
-
-              // Security Info Card
-              Card(
-                color: Colors.blue[50],
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      Icon(Icons.info_outline, color: Colors.blue[700]),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Siguria e Fjalëkalimit',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue[900],
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Përdorni një fjalëkalim të fortë me minimumi 6 karaktere',
-                              style: TextStyle(
-                                color: Colors.blue[900],
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
+              // Security tips
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: forestGhost,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.shield_outlined,
+                            color: forestMid, size: 18),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Këshilla Sigurie',
+                          style: GoogleFonts.nunito(
+                            fontWeight: FontWeight.bold,
+                            color: forestDark,
+                            fontSize: 13,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Përdorni minimumi 6 karaktere, kombinoni shkronja të mëdha dhe numra për fjalëkalim të fortë.',
+                      style: GoogleFonts.nunito(
+                          color: forestDark, fontSize: 12),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required bool obscure,
+    required VoidCallback onToggle,
+    String? Function(String?)? validator,
+    void Function(String)? onChanged,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: GoogleFonts.nunito(color: textMuted, fontSize: 13),
+        hintText: hint,
+        hintStyle: GoogleFonts.nunito(
+            color: textMuted.withOpacity(0.6), fontSize: 13),
+        prefixIcon: const Icon(Icons.lock_outline, color: forestMid, size: 20),
+        suffixIcon: IconButton(
+          icon: Icon(
+            obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            color: textMuted,
+            size: 20,
+          ),
+          onPressed: onToggle,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: earthLight),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: earthLight),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: forestMid, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Color(0xFFDC2626)),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      ),
+      style: GoogleFonts.nunito(color: textDark),
+      validator: validator,
     );
   }
 }
