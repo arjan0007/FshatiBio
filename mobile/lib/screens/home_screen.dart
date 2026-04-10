@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
 import 'cart_screen.dart';
+import 'dashboard_screen.dart';
 import 'orders_screen.dart';
 import 'products_screen.dart';
 import 'profile_screen.dart';
@@ -34,12 +35,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    ProductsScreen(),
-    CartScreen(),
-    OrdersScreen(),
-    ProfileScreen(),
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      DashboardScreen(onGoToProducts: () => setState(() => _currentIndex = 1)),
+      const ProductsScreen(),
+      const CartScreen(),
+      const OrdersScreen(),
+      const ProfileScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +95,17 @@ class _HomeScreenState extends State<HomeScreen> {
               items: [
                 BottomNavigationBarItem(
                   icon: _NavIcon(
+                    icon: Icons.home_outlined,
+                    activeIcon: Icons.home,
+                    isSelected: _currentIndex == 0,
+                  ),
+                  label: 'Kryefaqja',
+                ),
+                BottomNavigationBarItem(
+                  icon: _NavIcon(
                     icon: Icons.storefront_outlined,
                     activeIcon: Icons.storefront,
-                    isSelected: _currentIndex == 0,
+                    isSelected: _currentIndex == 1,
                   ),
                   label: 'Produktet',
                 ),
@@ -102,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           _NavIcon(
                             icon: Icons.shopping_basket_outlined,
                             activeIcon: Icons.shopping_basket,
-                            isSelected: _currentIndex == 1,
+                            isSelected: _currentIndex == 2,
                           ),
                           if (cart.itemCount > 0)
                             Positioned(
@@ -139,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: _NavIcon(
                     icon: Icons.receipt_long_outlined,
                     activeIcon: Icons.receipt_long,
-                    isSelected: _currentIndex == 2,
+                    isSelected: _currentIndex == 3,
                   ),
                   label: 'Porositë',
                 ),
@@ -147,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: _NavIcon(
                     icon: Icons.person_outline,
                     activeIcon: Icons.person,
-                    isSelected: _currentIndex == 3,
+                    isSelected: _currentIndex == 4,
                   ),
                   label: 'Profili',
                 ),
