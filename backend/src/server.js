@@ -22,7 +22,10 @@ app.use(cors({
     process.env.FRONTEND_URL || 'http://localhost:3000',
     'http://localhost:3000', // Web Platform
     'http://localhost:3001', // Web Platform (alternative)
-    'http://localhost:3002'  // Admin Panel
+    'http://localhost:3002', // Admin Panel
+    'http://localhost:3333', // Mobile app (Flutter web)
+    'http://localhost:3334', // Mobile app (Flutter web alt)
+    'http://localhost:3335', // Mobile app (Flutter web alt)
   ],
   credentials: true
 }));

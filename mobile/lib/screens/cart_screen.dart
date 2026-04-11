@@ -51,87 +51,72 @@ class _CartScreenState extends State<CartScreen> {
       );
     }
 
-    if (!auth.isAuthenticated) {
-      return Scaffold(
-        backgroundColor: creamBg,
-        appBar: AppBar(
-          title: Text('Shporta ime',
-              style: GoogleFonts.playfairDisplay(
-                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600)),
-          backgroundColor: forestMid,
-          elevation: 0,
-          centerTitle: true,
-        ),
-        body: _buildGuestState(context),
-      );
-    }
-
     return Consumer<CartProvider>(
       builder: (context, cartProvider, _) {
-        if (cartProvider.isLoading) {
-          return const Scaffold(
+        // ── Authenticated user: show server cart ─────────────────────────
+        if (auth.isAuthenticated) {
+          if (cartProvider.isLoading) {
+            return const Scaffold(
+              backgroundColor: creamBg,
+              body: Center(child: CircularProgressIndicator(color: forestMid)),
+            );
+          }
+          final cart = cartProvider.cart;
+          if (cart.items.isEmpty) {
+            return Scaffold(
+              backgroundColor: creamBg,
+              appBar: _appBar(0),
+              body: _buildEmptyState(context),
+            );
+          }
+          return Scaffold(
             backgroundColor: creamBg,
-            body: Center(child: CircularProgressIndicator(color: forestMid)),
+            appBar: _appBar(cart.items.length),
+            body: Column(
+              children: [
+                Expanded(child: _itemList(cart.items, cartProvider, auth.isAuthenticated)),
+                _buildSummaryCard(
+                  items: cart.items,
+                  subtotal: cart.subtotal,
+                  deliveryFee: cart.deliveryFee,
+                  total: cart.total,
+                  cartSummary: cart,
+                  isGuest: false,
+                  context: context,
+                ),
+              ],
+            ),
           );
         }
 
-        final cart = cartProvider.cart;
-        if (cart.items.isEmpty) {
+        // ── Guest: show local cart ────────────────────────────────────────
+        final guestItems = cartProvider.guestCart;
+        if (guestItems.isEmpty) {
           return Scaffold(
             backgroundColor: creamBg,
-            appBar: AppBar(
-              title: Text('Shporta ime',
-                  style: GoogleFonts.playfairDisplay(
-                      color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600)),
-              backgroundColor: forestMid,
-              elevation: 0,
-              centerTitle: true,
-            ),
+            appBar: _appBar(0),
             body: _buildEmptyState(context),
           );
         }
+        final guestSubtotal = cartProvider.guestSubtotal;
+        const guestDelivery = 200.0;
+        final guestTotal = guestSubtotal + guestDelivery;
 
         return Scaffold(
           backgroundColor: creamBg,
-          appBar: _buildCartAppBar(cart),
+          appBar: _appBar(guestItems.length),
           body: Column(
             children: [
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: cartProvider.refreshCart,
-                  color: forestMid,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 140),
-                    itemCount: cart.items.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final item = cart.items[index];
-                      return Dismissible(
-                        key: ValueKey(item.id),
-                        direction: DismissDirection.endToStart,
-                        background: _buildDismissibleBackground(),
-                        onDismissed: (_) {
-                          cartProvider.removeItem(item.id);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: forestMid,
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              content: Text(
-                                '${item.product.name} u hoq nga shporta',
-                                style: GoogleFonts.nunito(color: Colors.white),
-                              ),
-                            ),
-                          );
-                        },
-                        child: _buildCartItemCard(item, cartProvider),
-                      );
-                    },
-                  ),
-                ),
+              Expanded(child: _itemList(guestItems, cartProvider, false)),
+              _buildSummaryCard(
+                items: guestItems,
+                subtotal: guestSubtotal,
+                deliveryFee: guestDelivery,
+                total: guestTotal,
+                cartSummary: null,
+                isGuest: true,
+                context: context,
               ),
-              _buildSummaryCard(cart, context),
             ],
           ),
         );
@@ -139,15 +124,16 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  PreferredSizeWidget _buildCartAppBar(CartSummary cart) {
+  PreferredSizeWidget _appBar(int count) {
     return AppBar(
       title: Column(
         children: [
           Text('Shporta ime',
               style: GoogleFonts.playfairDisplay(
                   color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600)),
-          Text('${cart.items.length} produkte',
-              style: GoogleFonts.nunito(color: Colors.white70, fontSize: 12)),
+          if (count > 0)
+            Text('$count produkte',
+                style: GoogleFonts.nunito(color: Colors.white70, fontSize: 12)),
         ],
       ),
       backgroundColor: forestMid,
@@ -156,7 +142,43 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildCartItemCard(CartItem item, CartProvider cartProvider) {
+  Widget _itemList(List<CartItem> items, CartProvider cartProvider, bool isAuth) {
+    return RefreshIndicator(
+      onRefresh: isAuth ? cartProvider.refreshCart : () async {},
+      color: forestMid,
+      child: ListView.separated(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 140),
+        itemCount: items.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final item = items[index];
+          return Dismissible(
+            key: ValueKey(item.id),
+            direction: DismissDirection.endToStart,
+            background: _dismissBg(),
+            onDismissed: (_) {
+              if (isAuth) {
+                cartProvider.removeItem(item.id);
+              } else {
+                cartProvider.removeGuestItem(item.id);
+              }
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: forestMid,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                content: Text('${item.product.name} u hoq nga shporta',
+                    style: GoogleFonts.nunito(color: Colors.white)),
+              ));
+            },
+            child: _itemCard(item, cartProvider, isAuth),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _itemCard(CartItem item, CartProvider cartProvider, bool isAuth) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -180,10 +202,9 @@ class _CartScreenState extends State<CartScreen> {
                       width: 82,
                       height: 82,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          _buildImagePlaceholder(),
+                      errorBuilder: (_, __, ___) => _imgPlaceholder(),
                     )
-                  : _buildImagePlaceholder(),
+                  : _imgPlaceholder(),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -193,15 +214,13 @@ class _CartScreenState extends State<CartScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          item.product.name,
-                          style: GoogleFonts.playfairDisplay(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: textDark),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        child: Text(item.product.name,
+                            style: GoogleFonts.playfairDisplay(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: textDark),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis),
                       ),
                       if (item.product.isBio)
                         Container(
@@ -219,22 +238,18 @@ class _CartScreenState extends State<CartScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    '${item.unitPrice.toStringAsFixed(2)} L / ${item.product.unit}',
-                    style: GoogleFonts.nunito(color: textMuted, fontSize: 13),
-                  ),
+                  Text('${item.unitPrice.toStringAsFixed(2)} L / ${item.product.unit}',
+                      style: GoogleFonts.nunito(color: textMuted, fontSize: 13)),
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      _buildQuantityControl(item, cartProvider),
+                      _qtyControl(item, cartProvider, isAuth),
                       const Spacer(),
-                      Text(
-                        '${item.totalPrice.toStringAsFixed(2)} L',
-                        style: GoogleFonts.playfairDisplay(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                            color: forestMid),
-                      ),
+                      Text('${item.totalPrice.toStringAsFixed(2)} L',
+                          style: GoogleFonts.playfairDisplay(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                              color: forestMid)),
                     ],
                   ),
                 ],
@@ -246,39 +261,44 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildQuantityControl(CartItem item, CartProvider cartProvider) {
+  Widget _qtyControl(CartItem item, CartProvider cartProvider, bool isAuth) {
     return Row(
       children: [
         GestureDetector(
           onTap: () {
-            if (item.quantity > 1) {
-              cartProvider.updateItem(item.id, item.quantity - 1);
+            if (isAuth) {
+              if (item.quantity > 1) {
+                cartProvider.updateItem(item.id, item.quantity - 1);
+              } else {
+                cartProvider.removeItem(item.id);
+              }
             } else {
-              cartProvider.removeItem(item.id);
+              cartProvider.updateGuestItem(item.id, item.quantity - 1);
             }
           },
           child: Container(
-            width: 36,
-            height: 36,
+            width: 36, height: 36,
             decoration: BoxDecoration(
-                color: forestGhost,
-                borderRadius: BorderRadius.circular(10)),
+                color: forestGhost, borderRadius: BorderRadius.circular(10)),
             child: const Icon(Icons.remove, size: 18, color: forestMid),
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            '${item.quantity}',
-            style: GoogleFonts.nunito(
-                fontWeight: FontWeight.bold, fontSize: 16, color: textDark),
-          ),
+          child: Text('${item.quantity}',
+              style: GoogleFonts.nunito(
+                  fontWeight: FontWeight.bold, fontSize: 16, color: textDark)),
         ),
         GestureDetector(
-          onTap: () => cartProvider.updateItem(item.id, item.quantity + 1),
+          onTap: () {
+            if (isAuth) {
+              cartProvider.updateItem(item.id, item.quantity + 1);
+            } else {
+              cartProvider.updateGuestItem(item.id, item.quantity + 1);
+            }
+          },
           child: Container(
-            width: 36,
-            height: 36,
+            width: 36, height: 36,
             decoration: BoxDecoration(
                 color: forestMid, borderRadius: BorderRadius.circular(10)),
             child: const Icon(Icons.add, size: 18, color: Colors.white),
@@ -288,16 +308,21 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildSummaryCard(CartSummary cart, BuildContext context) {
+  Widget _buildSummaryCard({
+    required List<CartItem> items,
+    required double subtotal,
+    required double deliveryFee,
+    required double total,
+    CartSummary? cartSummary,
+    required bool isGuest,
+    required BuildContext context,
+  }) {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         boxShadow: [
-          BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 20,
-              offset: Offset(0, -6))
+          BoxShadow(color: Color(0x14000000), blurRadius: 20, offset: Offset(0, -6))
         ],
       ),
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -311,44 +336,95 @@ class _CartScreenState extends State<CartScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    cart.subtotal >= 5000
+                    subtotal >= 5000
                         ? '🎉 Nëntotali i lartë! Kontakto suportin për oferta speciale.'
-                        : 'Shto edhe ${(5000 - cart.subtotal).clamp(0, double.infinity).toStringAsFixed(2)} L për oferta speciale.',
+                        : 'Shto edhe ${(5000 - subtotal).clamp(0, double.infinity).toStringAsFixed(0)} L për oferta speciale.',
                     style: GoogleFonts.nunito(color: textMuted, fontSize: 12),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 14),
-            _summaryRow('Nëntotali', cart.subtotal),
-            _summaryRow('Dërgesa', cart.deliveryFee),
+            _summaryRow('Nëntotali', subtotal),
+            _summaryRow('Dërgesa', deliveryFee),
             Divider(color: earthLight, thickness: 1, height: 20),
-            _summaryRow('Totali', cart.total, bold: true),
+            _summaryRow('Totali', total, bold: true),
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => CheckoutScreen(cart: cart),
+
+            // ── Guest: show "Kyçu për të blerë" ──────────────────────────
+            if (isGuest) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  color: forestGhost,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info_outline, color: forestMid, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Duhet të kyçeni për të përfunduar blerjen',
+                        style: GoogleFonts.nunito(
+                            color: forestDark, fontSize: 13),
+                      ),
                     ),
-                  );
-                },
-                icon: const Icon(Icons.lock_outline, size: 18),
-                label: Text('Vazhdo te Checkout',
-                    style: GoogleFonts.nunito(
-                        fontWeight: FontWeight.bold, fontSize: 16)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: honeyMid,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24, vertical: 16),
+                  ],
                 ),
               ),
-            ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
+                  },
+                  icon: const Icon(Icons.login, size: 18),
+                  label: Text('Kyçu & Blerë',
+                      style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: forestMid,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                  ),
+                ),
+              ),
+            ],
+
+            // ── Authenticated: go to checkout ─────────────────────────────
+            if (!isGuest && cartSummary != null)
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => CheckoutScreen(cart: cartSummary),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.shopping_bag_outlined, size: 18),
+                  label: Text('Vazhdo te Checkout',
+                      style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: honeyMid,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                  ),
+                ),
+              ),
+
             const SizedBox(height: 12),
           ],
         ),
@@ -366,26 +442,21 @@ class _CartScreenState extends State<CartScreen> {
               style: GoogleFonts.nunito(
                   fontSize: bold ? 16 : 14,
                   color: bold ? textDark : textMuted,
-                  fontWeight:
-                      bold ? FontWeight.bold : FontWeight.normal)),
+                  fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
           Text(
             '${value.toStringAsFixed(2)} L',
             style: bold
                 ? GoogleFonts.playfairDisplay(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: forestMid)
+                    fontSize: 20, fontWeight: FontWeight.bold, color: forestMid)
                 : GoogleFonts.nunito(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: textDark),
+                    fontSize: 14, fontWeight: FontWeight.w600, color: textDark),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDismissibleBackground() {
+  Widget _dismissBg() {
     return Container(
       decoration: BoxDecoration(
           color: const Color(0xFFDC2626).withOpacity(0.1),
@@ -396,7 +467,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildImagePlaceholder() {
+  Widget _imgPlaceholder() {
     return Container(
       width: 82,
       height: 82,
@@ -417,9 +488,7 @@ class _CartScreenState extends State<CartScreen> {
             const SizedBox(height: 20),
             Text('Shporta është bosh',
                 style: GoogleFonts.playfairDisplay(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: textDark)),
+                    fontSize: 24, fontWeight: FontWeight.bold, color: textDark)),
             const SizedBox(height: 10),
             Text(
               'Shto produkte të freskëta organike për të vazhduar blerjet',
@@ -441,58 +510,6 @@ class _CartScreenState extends State<CartScreen> {
                     horizontal: 24, vertical: 16),
                 elevation: 2,
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGuestState(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                  color: forestGhost, shape: BoxShape.circle),
-              child: const Icon(Icons.lock_outline,
-                  size: 56, color: forestMid),
-            ),
-            const SizedBox(height: 20),
-            Text('Kyçu për të parë shportën',
-                style: GoogleFonts.playfairDisplay(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: textDark)),
-            const SizedBox(height: 10),
-            Text(
-              'Bëj login për të vazhduar me porositë e tua',
-              style: GoogleFonts.nunito(fontSize: 14, color: textMuted),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 28),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: forestMid,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50)),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 32, vertical: 16),
-                elevation: 2,
-              ),
-              child: Text('Kyçu',
-                  style:
-                      GoogleFonts.nunito(fontWeight: FontWeight.bold)),
             ),
           ],
         ),

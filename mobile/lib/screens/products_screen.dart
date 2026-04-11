@@ -58,8 +58,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
         _fetchProducts(),
       ]);
       final fetchedCategories = results[0] as List<Category>;
+      final fetchedProducts = results[1] as List<Product>;
       setState(() {
         categories = fetchedCategories;
+        products = fetchedProducts;
         loading = false;
       });
     } catch (e) {
@@ -136,7 +138,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   Future<void> _addToCart(Product product) async {
     final auth = context.read<AuthProvider>();
+    final cart = context.read<CartProvider>();
+
     if (!auth.isAuthenticated) {
+      // Guest: add to local cart, no login required
+      cart.addGuestItem(product);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -144,17 +150,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12)),
-            action: SnackBarAction(
-              label: 'Kyçu',
-              textColor: honeyMid,
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                );
-              },
-            ),
             content: Text(
-              'Duhet të kyçeni për të shtuar në shportë',
+              '${product.name} u shtua në shportë',
               style: GoogleFonts.nunito(color: Colors.white),
             ),
           ),
@@ -164,7 +161,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
 
     try {
-      await context.read<CartProvider>().addItem(product.id);
+      await cart.addItem(product.id);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

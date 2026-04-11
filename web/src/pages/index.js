@@ -554,96 +554,97 @@ export default function Home() {
       </section>
 
       {/* Categories */}
-      <section ref={categorySectionRef} className="relative py-12 sm:py-16 md:py-20 overflow-hidden bg-[#fefae0]">
-        {/* Decorative leaf */}
-        <div className="absolute top-8 right-8 opacity-10">
-          <svg className="w-24 h-24 text-[#2d6a4f]" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17 8C8 10 5.9 16.17 3.82 19.1L5.71 21l1-1.3A4.49 4.49 0 008 20c4 0 8-3 11-12l-2 0z"/>
-          </svg>
-        </div>
+      <section ref={categorySectionRef} className="relative py-14 sm:py-20 overflow-hidden bg-[#1b4332]">
+        {/* Background texture */}
+        <div className="absolute inset-0 opacity-5" style={{backgroundImage: 'radial-gradient(circle at 20% 50%, #52b788 0%, transparent 50%), radial-gradient(circle at 80% 20%, #40916c 0%, transparent 50%)'}}></div>
 
-        <div className="container mx-auto px-3 sm:px-4 md:px-6 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           {/* Section Header */}
-          <div className="text-center mb-8 sm:mb-12 md:mb-14">
-            <div className="inline-flex items-center gap-2 bg-[#d8f3dc] text-[#2d6a4f] text-xs font-bold px-4 py-1.5 rounded-full border border-[#b7e4c7] mb-4">
-              <svg className="w-4 h-4 animate-leaf-sway" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17 8C8 10 5.9 16.17 3.82 19.1L5.71 21l1-1.3A4.49 4.49 0 008 20c4 0 8-3 11-12l-2 0z"/>
-              </svg>
-              Koleksioni BIO
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10 sm:mb-14 gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/10 text-[#52b788] text-xs font-bold px-4 py-1.5 rounded-full border border-white/20 mb-4 backdrop-blur-sm">
+                <span>🌿</span> Koleksioni BIO
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
+                Zgjidh <span className="text-[#52b788]">kategorinë</span>
+              </h2>
+              <p className="text-white/60 text-sm sm:text-base mt-2 max-w-md">
+                Produkte 100% organike, direkt nga fermerët shqiptarë
+              </p>
             </div>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[#1b4332] mb-3 sm:mb-4">
-              Kategoritë
-            </h2>
-            <p className="text-[#52b788] text-sm sm:text-base md:text-lg font-medium max-w-xl mx-auto">
-              Zgjidh nga kategoritë tona të gjerë të produkteve organike
-            </p>
+            <Link href="/products" className="self-start sm:self-auto inline-flex items-center gap-2 text-[#52b788] hover:text-white font-semibold text-sm transition-colors duration-200 group">
+              Të gjitha produktet
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+              </svg>
+            </Link>
           </div>
 
           {loading ? (
-            <div className="text-center py-16 md:py-20">
-              <div className="inline-block">
-                <div className="animate-spin rounded-full h-14 w-14 border-4 border-[#2d6a4f] border-t-transparent"></div>
-              </div>
+            <div className="flex gap-4 overflow-hidden">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex-shrink-0 w-48 h-64 rounded-3xl bg-white/10 animate-pulse"></div>
+              ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
               {categories.map((category, index) => {
-                // Get emoji for category
-                const getEmoji = (name) => {
-                  const emojiMap = {
-                    'Qumësht': '🥛',
-                    'Djathë': '🧀',
-                    'Vezë': '🥚',
-                    'Zogj Fshati': '🐔',
-                    'Mish Viçi': '🐄',
-                    'Mish Qengji': '🐑',
-                    'Gjalpë & Kos': '🧈'
-                  };
-                  return emojiMap[name] || '🌾';
+                const photoMap = {
+                  'Qumësht':      'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80',
+                  'Djathë':       'https://images.unsplash.com/photo-1486297678162-eb2a19b0a2d0?w=400&q=80',
+                  'Vezë':         'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400&q=80',
+                  'Zogj Fshati':  'https://images.unsplash.com/photo-1501200291289-c5a76c232e5f?w=400&q=80',
+                  'Mish Viçi':    'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&q=80',
+                  'Mish Qengji':  'https://images.unsplash.com/photo-1602473773312-100e0b02be64?w=400&q=80',
+                  'Gjalpë & Kos': 'https://images.unsplash.com/photo-1571752726703-5e7d1f6a986d?w=400&q=80',
                 };
-
-                // Get nature-inspired gradient colors for each category
-                const getGradient = (name) => {
-                  const gradients = {
-                    'Qumësht': 'from-[#caf0f8] to-[#90e0ef]',
-                    'Djathë': 'from-[#fff3cd] to-[#ffc107]',
-                    'Vezë': 'from-[#fff0d3] to-[#f4a261]',
-                    'Zogj Fshati': 'from-[#fce4ec] to-[#f48fb1]',
-                    'Mish Viçi': 'from-[#ffe0b2] to-[#e76f51]',
-                    'Mish Qengji': 'from-[#fce4ec] to-[#ef9a9a]',
-                    'Gjalpë & Kos': 'from-[#fff9c4] to-[#f9a825]'
-                  };
-                  return gradients[name] || 'from-[#d8f3dc] to-[#52b788]';
+                const emojiMap = {
+                  'Qumësht': '🥛', 'Djathë': '🧀', 'Vezë': '🥚',
+                  'Zogj Fshati': '🐔', 'Mish Viçi': '🥩',
+                  'Mish Qengji': '🍖', 'Gjalpë & Kos': '🧈'
                 };
+                const photo = photoMap[category.name] || 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400&q=80';
+                const emoji = emojiMap[category.name] || '🌾';
 
                 return (
                   <Link
                     key={category.id}
                     href={`/products?category=${category.id}`}
-                    className="group"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className="group block"
+                    style={{ animationDelay: `${index * 0.08}s` }}
                   >
-                    <div className="bg-white rounded-3xl shadow-[0_4px_20px_rgba(45,106,79,0.08)] hover:shadow-[0_8px_30px_rgba(45,106,79,0.18)] border border-[#d8f3dc] overflow-hidden transition-all duration-300 hover:-translate-y-1">
-                      {/* Category icon background */}
-                      <div className={`h-24 sm:h-28 md:h-32 bg-gradient-to-br ${getGradient(category.name)} flex items-center justify-center relative overflow-hidden`}>
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <span className="text-4xl sm:text-5xl transform group-hover:scale-110 transition-transform duration-300 filter drop-shadow-md">
-                          {getEmoji(category.name)}
-                        </span>
+                    <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[3/4] cursor-pointer transform transition-all duration-400 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
+                      {/* Food photo */}
+                      <img
+                        src={photo}
+                        alt={category.name}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
+                      />
+                      {/* Dark gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+                      {/* Hover shine */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/0 group-hover:from-white/10 group-hover:to-transparent transition-all duration-300"></div>
+
+                      {/* Emoji badge */}
+                      <div className="absolute top-3 left-3">
+                        <div className="w-9 h-9 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/30 text-lg">
+                          {emoji}
+                        </div>
                       </div>
 
-                      {/* Category name */}
-                      <div className="p-3 sm:p-4 text-center">
-                        <h3 className="font-semibold text-sm sm:text-base text-[#1b4332] group-hover:text-[#2d6a4f] transition-colors duration-300 line-clamp-2 leading-tight">
+                      {/* BIO badge */}
+                      <div className="absolute top-3 right-3">
+                        <span className="text-[10px] font-bold bg-[#52b788] text-white px-2 py-0.5 rounded-full">BIO</span>
+                      </div>
+
+                      {/* Name + arrow */}
+                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                        <h3 className="text-white font-bold text-sm sm:text-base leading-tight mb-1 drop-shadow">
                           {category.name}
                         </h3>
-                        <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-[#52b788] font-semibold">
-                            Shiko
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </span>
+                        <div className="flex items-center gap-1 text-[#52b788] text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-1 group-hover:translate-y-0 transition-transform">
+                          Shiko →
                         </div>
                       </div>
                     </div>
